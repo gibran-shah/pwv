@@ -5,7 +5,7 @@ function pageLoad() {
 function importFile() {
     console.log('import file');
     const xhttp = new XMLHttpRequest();
-    const url = 'http://localhost:3000';
+    const url = 'http://localhost:3000/import';
 
     xhttp.onreadystatechange = function() {
       console.log('readyState: ', this.readyState);
