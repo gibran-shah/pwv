@@ -8,10 +8,25 @@ const fbAdmin = require('firebase-admin');
 const router = exp.Router();
 
 router.post('/signin', (req, res, next) => {
-    console.log('signing in');
+    const {
+        username,
+        password
+    } = req.body;
 
-    console.log(`req.body = ${JSON.stringify(req.body)}`);
-}); 
+  //  initFirebase();
+
+    const app = getAppByApiKey();
+    const auth = fa.getAuth(app);
+
+    fa.signInWithEmailAndPassword(auth, username, password)
+        .then((userCredentials) => {
+            console.log('success!');
+            res.status(200).send('success!');
+        }).catch((err) => {
+            console.log(JSON.stringify(err));
+            res.status(500).send('failed to sign in');
+        });
+});
 
 router.post('/', (req, res, next) => {
 
@@ -53,6 +68,18 @@ const initFirebase = function() {
         });
         fs.appendFileSync('log.txt', new Date().toString() + ': in import.js : router.post : Firebase Admin initialized.\n');
     }
+}
+
+const getAppByApiKey = function() {
+    return fapp.initializeApp({
+        apiKey: "AIzaSyByzTZsxr-ZKD0jxGXPkxKzeBLXHoF21OU",
+        authDomain: "mypwv-79723.firebaseapp.com",
+        projectId: "mypwv-79723",
+        storageBucket: "mypwv-79723.appspot.com",
+        messagingSenderId: "5063626939",
+        appId: "1:5063626939:web:826dc2f9e84f100187599e",
+        measurementId: "G-MKRJZXLTBB"
+    });
 }
 
 module.exports = router;
