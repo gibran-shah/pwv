@@ -6,8 +6,16 @@
     <body>
         <button onclick="importFile()">READ</button><br/>
         <br/>
-        Username: <input type="text" id="username"/><br/>
-        Password: <input type="password" id="password"/><br/>
-        <button onclick="signIn()">GET IN</button>
+        <div id="signin-container">
+            Username: <input type="text" id="username"/><br/>
+            Password: <input type="password" id="password"/><br/>
+            <button onclick="signIn()">GET IN</button>
+        </div>
+        <div id="signout-container" style="display: none;">
+            <button onclick="signOut()">Leave</button>
+        </div>
+        <div>
+            <button onclick="add()">ADD</button>
+        </div>
     </body>
 </html>
