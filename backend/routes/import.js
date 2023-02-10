@@ -1,12 +1,13 @@
 const fs = require('fs');
 const exp = require('express');
 const fbAdmin = require('firebase-admin');
+const { utils } = require('./utils.js');
 
 const router = exp.Router();
 
 router.get('/', (req, res, next) => {
     try {
-        initFirebase();
+        utils.initFirebase();
         const fileRows = getFileRows();
         storeFileRows(fileRows);
         res.status(200);
@@ -16,17 +17,6 @@ router.get('/', (req, res, next) => {
         res.status(500).send('Something went wrong when trying to import passwords.');
     }
 });
-
-const initFirebase = function() {
-    if (!fbAdmin.apps.length) {
-        const serviceAccount = require(process.env.SERVICE_ACCOUNT_FILE_PATH);
-        fbAdmin.initializeApp({
-            credential: fbAdmin.credential.cert(serviceAccount),
-            databaseURL: process.env.DB_URL
-        });
-        fs.appendFileSync('log.txt', new Date().toString() + ': in import.js : router.post : Firebase Admin initialized.\n');
-    }
-}
 
 const getFileRows = function() {
     const buffer = fs.readFileSync(process.env.IMPORT_FILE);
