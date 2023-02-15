@@ -7,7 +7,11 @@ function register() {
 }
 
 function add() {
-    ajax('add', 'POST', {data: 'abc123'});
+    const payload = {
+      content: [ 'abc123', 'hello,s,u,g,a,r' ]
+    };
+    payload.content = encodeCommas(payload.content);
+    ajax('add', 'POST', payload);
 }
 
 function signIn() {
@@ -40,6 +44,16 @@ function signOut() {
       signoutContainer.style.display = 'none';
     }
   );
+}
+
+function encodeCommas(array) {
+  const regex = /,/g
+  const newArray = [];
+
+  for (let i = 0; i < array.length; i++) {
+    newArray.push(array[i].replace(regex, '&comma;'));
+  }
+  return newArray;
 }
 
 function ajax(endpoint, method, payload, callback) {
