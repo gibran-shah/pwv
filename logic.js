@@ -2,8 +2,11 @@ function importFile() {
     ajax('import', 'GET');
 }
 
-function register() {
-    ajax('auth', 'POST');
+function search() {
+    const searchString = document.getElementById('search');
+    ajax('fetch', 'GET', { searchString: searchString.value }, () => {
+      console.log('callback!');
+    });
 }
 
 function add() {
@@ -58,10 +61,10 @@ function encodeCommas(array) {
 
 function ajax(endpoint, method, payload, callback) {
   const xhttp = new XMLHttpRequest();
-  const url = 'http://localhost:3000/' + endpoint;
+  const params = payload ? new URLSearchParams(payload) : null;
+  const url = 'http://localhost:3000/' + endpoint + (params ? `?${params}` : '');
 
   xhttp.onreadystatechange = function() {
-    console.log('readyState: ', this.readyState);
     if (this.readyState === 4) {
       if (this.status === 200) {
           console.log('success!');
@@ -75,8 +78,8 @@ function ajax(endpoint, method, payload, callback) {
   };
   xhttp.open(method, url, true);
   xhttp.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-  if (payload) {
-    xhttp.send(new URLSearchParams(payload));
+  if (params && method === 'POST') {
+    xhttp.send(params);
   } else {
     xhttp.send();
   }

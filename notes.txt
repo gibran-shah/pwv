@@ -3,5 +3,6 @@ RSA/ECB/PKCS1Padding
 RSA/ECB/OAEPWithSHA-1AndMGF1Padding
 https://www.npmjs.com/package/node-rsa
 https://stackoverflow.com/questions/75443612/how-do-i-handle-commas-in-array-of-strings-when-using-urlsearchparams
+https://stackoverflow.com/questions/75467492/how-to-i-send-parameters-in-an-ajax-get-request
 
 -get new private key before going live
