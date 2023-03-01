@@ -5,13 +5,18 @@ const { utils } = require('./utils.js');
 
 const router = exp.Router();
 
-router.get('/', (req, res, next) => {
+router.get('/', async (req, res, next) => {
     try {
         utils.initFirebase();
-        const fileRows = getFileRows();
-        const encryptedFileRows = encryptFileRows(fileRows);
-        storeFileRows(encryptedFileRows);
-        res.status(200);
+        const totalLines = await getTotalLinesFromDatabase();
+        if (!totalLines) {
+            const fileRows = getFileRows();
+            const encryptedFileRows = encryptFileRows(fileRows);
+            storeFileRows(encryptedFileRows);
+            res.status(200);
+        } else {
+            res.status(500).send('Cannot import. Database not empty.');
+        }
     } catch (err) {
         console.log(`err = ${JSON.stringify(err)}`);
         fs.appendFileSync('log.txt', new Date().toString() + ': in import.js : router.get : err = ' + err + '\n');
@@ -53,5 +58,15 @@ const encryptFileRows = function(fileRows) {
     fileRows.forEach((row) => encryptedRows.push(key.encrypt(row, 'base64')));
     return encryptedRows;
 }
+
+const getTotalLinesFromDatabase = async function() {
+    if (!fbAdmin.apps.length) {
+        utils.initFirebase();
+    }
+
+    const firestore = fbAdmin.apps[0].firestore();
+    const snapshot = await firestore.collection('lines').get();
+    return snapshot.docs.length;
+};
 
 module.exports = router;
