@@ -1,0 +1,189 @@
+2 non-overlapping matches for xxx 
+const testRecords = [
+    {line: 1, content: 'abc'},
+    {line: 2, content: '123'},
+    {line: 3, content: 'iixxxiii'},
+    {line: 4, content: 'abc'},
+    {line: 5, content: '123'},
+    {line: 6, content: 'abc'},
+    {line: 7, content: '123'},
+    {line: 8, content: 'abc'},
+    {line: 9, content: '123'},
+    {line: 10, content: 'abc'},
+    {line: 11, content: '123'},
+    {line: 12, content: 'ffffff dxxx'},
+    {line: 13, content: 'bbb'},
+    {line: 14, content: 'aaa'},
+    {line: 15, content: 'ccc'},
+    {line: 16, content: 'ddd'},
+    {line: 17, content: 'eee'},
+    {line: 18, content: 'fff'},
+    {line: 19, content: 'ggg'},
+    {line: 20, content: 'hhh'}
+];
+
+No matches:
+const testRecords = [
+    {line: 1, content: 'abc'},
+    {line: 2, content: '123'},
+    {line: 3, content: 'abc'},
+    {line: 4, content: '123'},
+    {line: 5, content: 'abc'},
+    {line: 6, content: '123'},
+    {line: 7, content: 'abc'},
+    {line: 8, content: '123'},
+    {line: 9, content: 'bbb'},
+    {line: 10, content: 'aaa'},
+    {line: 11, content: 'ccc'},
+    {line: 12, content: 'ddd'},
+    {line: 13, content: 'eee'},
+    {line: 14, content: 'fff'},
+    {line: 15, content: 'ggg'},
+    {line: 16, content: 'hhh'}
+];
+
+xxx on line 1:
+const testRecords = [
+    {line: 1, content: 'xxx'},
+    {line: 2, content: '123'},
+    {line: 3, content: 'abc'},
+    {line: 4, content: '123'},
+    {line: 5, content: 'abc'},
+    {line: 6, content: '123'},
+    {line: 7, content: 'abc'},
+    {line: 8, content: '123'},
+    {line: 9, content: 'bbb'},
+    {line: 10, content: 'aaa'},
+    {line: 11, content: 'ccc'},
+    {line: 12, content: 'ddd'},
+    {line: 13, content: 'eee'},
+    {line: 14, content: 'fff'},
+    {line: 15, content: 'ggg'},
+    {line: 16, content: 'hhh'}
+];
+
+xxx on last line
+const testRecords = [
+    {line: 1, content: 'abc'},
+    {line: 2, content: '123'},
+    {line: 3, content: 'abc'},
+    {line: 4, content: '123'},
+    {line: 5, content: 'abc'},
+    {line: 6, content: '123'},
+    {line: 7, content: 'abc'},
+    {line: 8, content: '123'},
+    {line: 9, content: 'bbb'},
+    {line: 10, content: 'aaa'},
+    {line: 11, content: 'ccc'},
+    {line: 12, content: 'ddd'},
+    {line: 13, content: 'eee'},
+    {line: 14, content: 'fff'},
+    {line: 15, content: 'ggg'},
+    {line: 16, content: 'xxx'}
+];
+
+xxx second from last
+const testRecords = [
+    {line: 1, content: 'abc'},
+    {line: 2, content: '123'},
+    {line: 3, content: 'abc'},
+    {line: 4, content: '123'},
+    {line: 5, content: 'abc'},
+    {line: 6, content: '123'},
+    {line: 7, content: 'abc'},
+    {line: 8, content: '123'},
+    {line: 9, content: 'bbb'},
+    {line: 10, content: 'aaa'},
+    {line: 11, content: 'ccc'},
+    {line: 12, content: 'ddd'},
+    {line: 13, content: 'eee'},
+    {line: 14, content: 'fff'},
+    {line: 15, content: 'xxx'},
+    {line: 16, content: 'hhh'}
+];
+
+2 overlapping xxx'
+const testRecords = [
+    {line: 1, content: 'abc'},
+    {line: 2, content: '123'},
+    {line: 3, content: 'abc'},
+    {line: 4, content: '123'},
+    {line: 5, content: 'abc'},
+    {line: 6, content: 'xxx'},
+    {line: 7, content: 'abc'},
+    {line: 8, content: '123'},
+    {line: 9, content: 'bbb'},
+    {line: 10, content: 'xxx'},
+    {line: 11, content: 'ccc'},
+    {line: 12, content: 'ddd'},
+    {line: 13, content: 'eee'},
+    {line: 14, content: 'fff'},
+    {line: 15, content: 'ggg'},
+    {line: 16, content: 'hhh'}
+];
+
+2 overlapping xxx's adjacent to each other
+const testRecords = [
+    {line: 1, content: 'abc'},
+    {line: 2, content: '123'},
+    {line: 3, content: 'abc'},
+    {line: 4, content: '123'},
+    {line: 5, content: 'abc'},
+    {line: 6, content: 'xxx'},
+    {line: 7, content: 'xxx'},
+    {line: 8, content: '123'},
+    {line: 9, content: 'bbb'},
+    {line: 10, content: 'aaa'},
+    {line: 11, content: 'ccc'},
+    {line: 12, content: 'ddd'},
+    {line: 13, content: 'eee'},
+    {line: 14, content: 'fff'},
+    {line: 15, content: 'ggg'},
+    {line: 16, content: 'hhh'}
+];
+
+2 overlapping xxx's and 1 non-overlapping xxx
+const testRecords = [
+    {line: 1, content: 'abc'},
+    {line: 2, content: '123'},
+    {line: 3, content: 'abc'},
+    {line: 4, content: '123'},
+    {line: 5, content: 'abc'},
+    {line: 6, content: 'xxx'},
+    {line: 7, content: 'xxx'},
+    {line: 8, content: '123'},
+    {line: 9, content: 'bbb'},
+    {line: 10, content: 'aaa'},
+    {line: 11, content: 'ccc'},
+    {line: 12, content: 'ddd'},
+    {line: 13, content: 'eee'},
+    {line: 14, content: 'fff'},
+    {line: 15, content: 'ggg'},
+    {line: 16, content: 'hhh'},
+    {line: 17, content: 'xxx'},
+    {line: 18, content: '123'},
+    {line: 19, content: 'bbb'}
+];
+
+br_end + recordsSinceLastMatch > records.length
+const testRecords = [
+    {line: 1, content: 'abc'},
+    {line: 2, content: '123'},
+    {line: 3, content: 'abc'},
+    {line: 4, content: '123'},
+    {line: 5, content: 'abc'},
+    {line: 6, content: '123'},
+    {line: 7, content: 'abc'},
+    {line: 8, content: '123'},
+    {line: 9, content: 'bbb'},
+    {line: 10, content: 'aaa'},
+    {line: 11, content: 'ccc'},
+    {line: 12, content: 'ddd'},
+    {line: 13, content: 'eee'},
+    {line: 14, content: 'xxx'},
+    {line: 15, content: 'ggg'},
+    {line: 16, content: 'hhh'},
+    {line: 17, content: 'iii'},
+    {line: 18, content: 'xxx'},
+    {line: 19, content: 'bbb'}
+];
