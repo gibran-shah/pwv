@@ -1,4 +1,5 @@
 const fs = require('fs');
+const rsa = require('node-rsa');
 const fa = require('firebase/auth');
 const fapp = require('firebase/app');
 const fbAdmin = require('firebase-admin');
@@ -11,7 +12,9 @@ const utils = {
 
     initFirebase: () => {
         initializeFirebase();
-    }
+    },
+
+    getRsaKey: () => new rsa(`${process.env.SECRET_RSA_KEY}`, 'pkcs8')
 }
 
 const getAppByApiKey = function() {
