@@ -42,11 +42,14 @@ const storeFileRows = function(fileRows) {
     }));
 
     const firestore = fbAdmin.apps[0].firestore();
-    const batch = firestore.batch();
-
+    let batch = firestore.batch();
     for (let i = 0; i < payload.length; i++) {
         const docRef = firestore.collection('lines').doc();
         batch.set(docRef, payload[i]);
+        if (i % 500 === 0) {
+            batch.commit();
+            batch = firestore.batch();
+        }
     }
 
     batch.commit();
