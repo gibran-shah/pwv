@@ -19,8 +19,12 @@ router.post('/signin', (req, res, next) => {
 
     fa.signInWithEmailAndPassword(auth, username, password)
         .then((userCredentials) => {
+            const {
+                accessToken,
+                expirationTime
+            } = userCredentials.user.stsTokenManager;
             console.log('success!');
-            res.status(200).send('success!');
+            res.status(200).send({accessToken, expirationTime});
         }).catch((err) => {
             console.log(JSON.stringify(err));
             res.status(500).send('failed to sign in');
