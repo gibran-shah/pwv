@@ -15,11 +15,9 @@ function pageLoad() {
 
 function isSignedIn() {
   const accessToken = localStorage.getItem('accessToken');
-  console.log(`accessToken = ${accessToken}`);
   if (accessToken) {
     const expirationTime = localStorage.getItem('expirationTime');
     if (expirationTime) {
-      console.log(`expirationTime = ${expirationTime}`);
       return parseInt(expirationTime) > Date.now();
     }
     return false;
@@ -34,7 +32,7 @@ function importFile() {
 
 function search() {
     const searchString = document.querySelector('#search-container input').value;
-    ajax('fetch', 'GET', { searchString: searchString.value }, () => {
+    ajax('fetch', 'GET', { searchString: searchString }, (response) => {
       console.log('callback!');
     });
 }
@@ -107,15 +105,6 @@ function wireElements() {
         search();
       }
     });
-  }
-}
-
-function removeEventListeners(elm, eventType) {
-  if (elm) {
-    const eventListeners = window.getEventListeners(elm);
-    for (let i = 0; i < eventListeners.length; i++) {
-      elm.removeEventListener(eventType, eventListeners[i]);
-    }
   }
 }
 
