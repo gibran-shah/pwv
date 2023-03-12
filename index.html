@@ -6,6 +6,7 @@
     </head>
     <body onload="pageLoad()">
 
+        <!-- sign in -->
         <div id="signed-out-container">
             <div id="credentials-outer-container">
                 <div id="credentials-inner-container">
@@ -15,7 +16,7 @@
                     </div>
                     <div id="password-container" class="credentials-element-container">
                         Password:<br/>
-                        <input type="text" id="username" style="width: 100%;" />
+                        <input type="pass" id="password" style="width: 100%;" />
                     </div>
                     <div id="get-in-btn-container" class="credentials-element-container">
                         <button onclick="signIn()">GET IN</button>
@@ -24,6 +25,25 @@
             </div>
         </div>
 
+        <!-- in -->
+        <div id="signed-in-container">
+            <div id="content-container">
+                <div id="search-add-sign-out-container">
+                    <div id="search-container">
+                        Search:
+                        <input type="text">
+                        <div id="search-btn-container" onclick="search()"></div>
+                    </div>
+                    <div id="add-btn-container" onclick="add()"></div>
+                    <div id="sign-out-btn-container">
+                        <a href="javascript:signOut()">SIGN OUT</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+<!--
         <button onclick="importFile()">READ</button><br/>
         <br/>
         <div id="signin-container">
@@ -43,5 +63,6 @@
             gibran.shah.pwv@gmail.com<br/>
             pwv.4real.123.@
         </dev>
+    -->
     </body>
 </html>

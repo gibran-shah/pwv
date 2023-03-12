@@ -1,12 +1,12 @@
 body {
     padding: 0;
     margin: 0;
+    background-image: linear-gradient(45deg, #aaaaff, white, #aaaaff);
 }
 
 #signed-out-container {
     width: 100%;
-    height: 100vh;
-    background-image: linear-gradient(45deg, #aaaaff, white, #aaaaff);
+    min-height: 100vh;
 
     display: flex;
     flex-direction: row;
@@ -46,4 +46,65 @@ body {
     display: flex;
     flex-direction: row;
     justify-content: flex-end;
+}
+
+#signed-in-container {
+    width: 100%;
+    min-height: 100vh;
+
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+#content-container {
+    width: 60%;
+    margin-top: 15px;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+}
+
+#search-add-sign-out-container {
+    width: 100%;
+
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#search-container {
+    width: 50%;
+
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+#search-container input {
+    margin-left: 5px;
+    flex: 1;
+    min-width: 10px;
+}
+
+#search-btn-container {
+    background: url(assets/images/search-icon.png) no-repeat;
+    width: 18px;
+    height: 18px;
+    margin-left: 2px;
+    cursor: pointer;
+}
+
+#add-btn-container {
+    background: url(assets/images/add-btn.png) no-repeat;
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+}
+
+#sign-out-btn-container a {
+    text-decoration: none;
 }

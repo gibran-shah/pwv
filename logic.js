@@ -3,6 +3,7 @@ const { access } = require("fs");
 function pageLoad() {
   if (isSignedIn()) {
     renderSignedInContainer();
+    wireElements();
   } else {
     renderSignedOutContainer();
     const username = document.getElementById('username');
@@ -32,18 +33,19 @@ function importFile() {
 }
 
 function search() {
-    const searchString = document.getElementById('search');
+    const searchString = document.querySelector('#search-container input').value;
     ajax('fetch', 'GET', { searchString: searchString.value }, () => {
       console.log('callback!');
     });
 }
 
 function add() {
-    const payload = {
-      content: [ 'abc123', 'hello,s,u,g,a,r' ]
-    };
-    payload.content = encodeCommas(payload.content);
-    ajax('add', 'POST', payload);
+  console.log('add!!!');
+    // const payload = {
+    //   content: [ 'abc123', 'hello,s,u,g,a,r' ]
+    // };
+    // payload.content = encodeCommas(payload.content);
+    // ajax('add', 'POST', payload);
 }
 
 function signIn() {
@@ -52,7 +54,7 @@ function signIn() {
   ajax(
     'auth/signin',
     'POST',
-    {username: username.value, password: password.value},
+    { username: username.value, password: password.value },
     (response) => {
       const responseObj = JSON.parse(response);
       const { accessToken, expirationTime } = responseObj;
@@ -60,6 +62,7 @@ function signIn() {
         localStorage.setItem('accessToken', accessToken);
         localStorage.setItem('expirationTime', expirationTime);
         renderSignedInContainer();
+        wireElements();
       } else {
         console.log('Could not log in');
       }
@@ -81,19 +84,39 @@ function signOut() {
 }
 
 function renderSignedInContainer() {
-  const signinContainer = document.getElementById('signin-container');
-  const signoutContainer = document.getElementById('signout-container');
-  signinContainer.style.display = 'none';
-  signoutContainer.style.display = 'block';
+  const signedInContainer = document.getElementById('signed-in-container');
+  const signedOutContainer = document.getElementById('signed-out-container');
+  signedInContainer.style.display = 'flex';
+  signedOutContainer.style.display = 'none';
   username.value = '';
   password.value = '';
 }
 
 function renderSignedOutContainer() {
-  const signinContainer = document.getElementById('signin-container');
-  const signoutContainer = document.getElementById('signout-container');
-  signinContainer.style.display = 'block';
-  signoutContainer.style.display = 'none';
+  const signedInContainer = document.getElementById('signed-in-container');
+  const signedOutContainer = document.getElementById('signed-out-container');
+  signedInContainer.style.display = 'none';
+  signedOutContainer.style.display = 'flex';
+}
+
+function wireElements() {
+  const searchInput = document.querySelector('#search-container input');
+  if (!window.keyPressEventListener && searchInput) {
+    window.keyPressEventListener = searchInput.addEventListener('keypress', (event) => {
+      if (event.key === 'Enter') {
+        search();
+      }
+    });
+  }
+}
+
+function removeEventListeners(elm, eventType) {
+  if (elm) {
+    const eventListeners = window.getEventListeners(elm);
+    for (let i = 0; i < eventListeners.length; i++) {
+      elm.removeEventListener(eventType, eventListeners[i]);
+    }
+  }
 }
 
 function encodeCommas(array) {
