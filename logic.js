@@ -1,5 +1,3 @@
-const { access } = require("fs");
-
 function pageLoad() {
   if (isSignedIn()) {
     renderSignedInContainer();
