@@ -31,7 +31,8 @@ function importFile() {
 function search() {
     const searchString = document.querySelector('#search-container input').value;
     ajax('fetch', 'GET', { searchString: searchString }, (response) => {
-      console.log('callback!');
+      const parsedResponse = JSON.parse(response);
+      showResults(parsedResponse, searchString);
     });
 }
 
@@ -106,6 +107,61 @@ function wireElements() {
   }
 }
 
+function showResults(results, searchString) {
+  const resultsContainer = document.querySelector('#search-results-container');
+  resultsContainer.innerHTML = '';
+
+  if (results.length) {
+    for (let i = 0; i < results.length; i++) {
+      const group = results[i];
+      const groupDiv = createGroupDiv(i);
+      for (let j = 0; j < group.length; j++) {
+        const line = group[j];
+        const lineDiv = createLineDiv(group, line, i, j, searchString);
+        groupDiv.append(lineDiv);
+      }
+      resultsContainer.append(groupDiv);
+    }
+  } else {
+    const noResultsDiv = createNoResultsDiv();
+    resultsContainer.append(noResultsDiv);
+  }
+}
+
+function createGroupDiv(groupNum) {
+  const groupDiv = document.createElement('div');
+  groupDiv.id = `results-group-container-${groupNum}`;
+  groupDiv.classList.add('results-group-container');
+  return groupDiv;
+}
+
+function createLineDiv(group, line, groupNum, lineNum, searchString) {
+  const lineDiv = document.createElement('div');
+  lineDiv.id = `result-line-container-${groupNum}-${lineNum}`;
+  lineDiv.classList.add('results-line-container');
+
+  const numberDiv = document.createElement('div');
+  numberDiv.innerHTML = `<span class='line-number-span'>${line.line}</span>`;
+  lineDiv.append(numberDiv);
+
+  const regex = new RegExp(searchString, 'g');
+  line.content = line.content.replace(regex, `<span class='search-string-instance'>${searchString}</span>`);
+
+  const contentDiv = document.createElement('div');
+  contentDiv.classList.add('line-content-container');
+  contentDiv.innerHTML = `<span class='line-content-span'>${line.content}</span>`;
+  lineDiv.append(contentDiv);
+
+  return lineDiv;
+}
+
+function createNoResultsDiv() {
+  const noResultsDiv = document.createElement('div');
+  noResultsDiv.id = 'no-results-container';
+  noResultsDiv.innerHTML = 'No Matches';
+  return noResultsDiv;
+}
+
 function encodeCommas(array) {
   const regex = /,/g
   const newArray = [];
@@ -124,12 +180,11 @@ function ajax(endpoint, method, payload, callback) {
   xhttp.onreadystatechange = function() {
     if (this.readyState === 4) {
       if (this.status === 200) {
-          console.log('success!');
-          if (callback instanceof Function) {
-            callback(this.response);
-          }
+        if (callback instanceof Function) {
+          callback(this.response);
+        }
       } else {
-          console.log('error: ', JSON.stringify(this));
+        console.log('error: ', JSON.stringify(this));
       }
     }  
   };

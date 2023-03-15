@@ -19,6 +19,60 @@ router.get('/', (req, res, next) => {
             const decryptedRecords = decryptRecords(allRecordsSorted);
             const matchingRecordGroups = findMatchingRecords(decryptedRecords, searchString, 1, 5);
             res.status(200).send(matchingRecordGroups);
+        }, (err) => {
+            console.log(`err = ${JSON.stringify(err)}`);
+            res.status(500).send('Something went wrong when attempting to fetch all records');
+          //  res.status(200).send([]);
+            /*
+            res.status(200).send([
+                [
+                    {
+                        line: 15,
+                        content: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry.'
+                    },
+                    {
+                        line: 16,
+                        content: 'Lorem Ipsum has been the industry\'s standard aws dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.'
+                    },
+                    {
+                        line: 17,
+                        content: 'It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.'
+                    }
+                ],
+                [
+                    {
+                        line: 500,
+                        content: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry.'
+                    },
+                    {
+                        line: 501,
+                        content: 'Lorem Ipsum has AWS been the industry\'s standard dummy text ever since the 1500s, when aws an unknown printer took a galley of type and scrambled it to make a type specimen book.'
+                    },
+                    {
+                        line: 502,
+                        content: 'It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.'
+                    },
+                    {
+                        line: 503,
+                        content: 'Lorem Ipsum is simply dummy text of the aws printing and typesetting industry.'
+                    },
+                    {
+                        line: 504,
+                        content: 'Lorem Ipsum has been the industry\'s standard aws dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.'
+                    },
+                    {
+                        line: 505,
+                        content: 'It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.'
+                    }
+                ],
+                [
+                    {
+                        line: 1021,
+                        content: 'Lorem Ipsum is simply dummy text of the aws printing and typesetting aws industry.'
+                    }
+                ]
+            ]);
+            */
         });        
     } else {
         res.status(403).send('Unauthorized');
