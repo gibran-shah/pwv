@@ -6,3 +6,5 @@ https://stackoverflow.com/questions/75443612/how-do-i-handle-commas-in-array-of-
 https://stackoverflow.com/questions/75467492/how-to-i-send-parameters-in-an-ajax-get-request
 
 -get new private key before going live
+
+https://stackoverflow.com/questions/75872817/how-can-i-search-my-encrypted-database-records
