@@ -13,7 +13,7 @@ router.get('/', async (req, res, next) => {
             const fileRows = getFileRows();
             const encryptedFileRows = encryptFileRows(fileRows);
             storeFileRows(encryptedFileRows);
-            res.status(200);
+            res.status(200).send();
         } else {
             res.status(500).send('Cannot import. Database not empty.');
         }
