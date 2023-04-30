@@ -15,19 +15,23 @@ router.get('/', (req, res, next) => {
             return;
         }
 
-        const index = false; //getIndex(searchString);
-        if (index) {
-            searchByIndex(index);
-        } else {
-            searchAllRecords(searchString).then((recordGroups) => {
-                return createIndexes(recordGroups, searchString);
-            }).then((recordGroups) => {
-                res.status(200).send(recordGroups);
-            }).catch ((err) => {
-                console.log(`err = ${JSON.stringify(err)}`);
-                res.status(500).send('Something went wrong when attempting to fetch all records');
-            });
-        }      
+        getIndexes(searchString).then(indexes => {
+            console.log(`indexes = ${JSON.stringify(indexes)}`);
+            if (indexes.length) {
+                searchByIndex(indexes, 1, 5).then((recordGroups) => {
+                    res.status(200).send(recordGroups);
+                })
+            } else {
+                searchAllRecords(searchString).then((recordGroups) => {
+                    return createIndexes(recordGroups, searchString);
+                }).then((recordGroups) => {
+                    res.status(200).send(recordGroups);
+                });
+            }
+        }).catch ((err) => {
+            console.log(`err = ${JSON.stringify(err)}`);
+            res.status(500).send('Something went wrong when attempting to fetch records');
+        });
     } else {
         res.status(403).send('Unauthorized');
     }
@@ -42,9 +46,12 @@ const createIndexes = (recordGroups, searchString) => {
     const firestore = fbAdmin.apps[0].firestore();
     const indexesRef = firestore.collection('indexes');
 
+    const idsToIndex = getIdsToIndex(recordGroups, searchString);
+    const encryptedIdsToIndex = encryptIdsToIndex(idsToIndex);
+
     return indexesRef.doc().set({
         searchString,
-        lineIds: getIdsToIndex(recordGroups, searchString)
+        lineIds: encryptedIdsToIndex
     }).then(() => recordGroups.map(rg => rg.map(r => ({
         line: r.line,
         content: r.content
@@ -57,7 +64,7 @@ const getIdsToIndex = (recordGroups, searchString) => {
         const group = recordGroups[i];
         for (let j = 0; j < group.length; j++) {
             if (group[j].content.toLowerCase().includes(searchString.toLowerCase())) {
-                idsToIndex.push(group[j].line);
+                idsToIndex.push(group[j].id);
             }
         }
     }
@@ -65,24 +72,70 @@ const getIdsToIndex = (recordGroups, searchString) => {
     return idsToIndex;
 };
 
-const getIndex = (searchString) => {
-    if (!fbAdmin.apps.length) {
-        utils.initFirebase();
-    }
+const encryptIdsToIndex = (idsToIndex) => {
+    const key = utils.getRsaKey();
+    return idsToIndex.map(id => key.encrypt(id, 'base64'));
+};
 
-    // const firestore = fbAdmin.apps[0].firestore();
-    // const indexesRef = firestore.collection('indexes');
-    // const q = query(indexesRef, where('searchString', '==', true));
+const decryptIndexedIds = (indexedIds) => {
+    const key = utils.getRsaKey();
+    const decryptedIds = indexedIds.map(id => key.decrypt(id, 'utf8'));
+    return decryptedIds;
 }
 
-const searchByIndex = (index) => {
+const getIndexes = (searchString) => {
     if (!fbAdmin.apps.length) {
         utils.initFirebase();
     }
 
-    // const firestore = fbAdmin.apps[0].firestore();
-    // return firestore.collection('indexes').get()
-    //     .then(snapshot => snapshot.docs.map(d => d.data()));
+    const firestore = fbAdmin.apps[0].firestore();
+    const indexesRef = firestore.collection('indexes');
+    const queryRef = indexesRef.where('searchString', '==', searchString.toLowerCase());
+    return queryRef.get().then(snapshot =>
+        snapshot.empty ? [] : decryptIndexedIds(snapshot.docs[0].data().lineIds)
+    );
+}
+
+const searchByIndex = async (indexes, frontRange = 0, backRange = 0) => {
+    if (!fbAdmin.apps.length) {
+        utils.initFirebase();
+    }
+
+    const firestore = fbAdmin.apps[0].firestore();
+    const lineCollection = firestore.collection('lines');
+
+    let currentGroup = []; // for each iteration
+    const recordGroups = []; // accumulator
+    for (let i = 0; i < indexes.length; i++) {
+        const doc = await lineCollection.doc(indexes[i]).get();
+        const lineData = doc.data();
+
+        // figure out range of lines to get:
+        let startLine = lineData.line - frontRange;
+        let endLine = lineData.line + backRange;
+
+        // figure out of we should continue with current group or start a new group:
+        if (currentGroup.length) {
+            const nextLine = currentGroup[currentGroup.length - 1].line + 1;
+            if (lineData.line <= nextLine) {
+                startLine = nextLine;
+            } else {
+                recordGroups.push(currentGroup);
+                currentGroup = [];
+            }
+        }
+
+        // get lines for current group:
+        const group = await lineCollection.where('line', '>=', startLine).where('line', '<=', endLine).get();
+        group.forEach(g => {
+            const data = g.data();
+            const decryptedRecord = decryptRecords([data])[0]; 
+            currentGroup.push(decryptedRecord);
+        });
+    }
+
+    recordGroups.push(currentGroup);
+    return recordGroups;
 };
 
 const searchAllRecords = async (searchString) => {
