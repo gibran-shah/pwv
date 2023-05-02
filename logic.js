@@ -144,8 +144,8 @@ function createLineDiv(group, line, groupNum, lineNum, searchString) {
   numberDiv.innerHTML = `<span class='line-number-span'>${line.line}</span>`;
   lineDiv.append(numberDiv);
 
-  const regex = new RegExp(searchString, 'g');
-  line.content = line.content.replace(regex, `<span class='search-string-instance'>${searchString}</span>`);
+  const regex = new RegExp(searchString, 'gi');
+  line.content = line.content.replace(regex, `<span class='search-string-instance'>$&</span>`);
 
   const contentDiv = document.createElement('div');
   contentDiv.classList.add('line-content-container');
