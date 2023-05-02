@@ -16,7 +16,6 @@ router.get('/', (req, res, next) => {
         }
 
         getIndexes(searchString).then(indexes => {
-            console.log(`indexes = ${JSON.stringify(indexes)}`);
             if (indexes.length) {
                 searchByIndex(indexes, 1, 5).then((recordGroups) => {
                     res.status(200).send(recordGroups);
@@ -103,6 +102,7 @@ const searchByIndex = async (indexes, frontRange = 0, backRange = 0) => {
 
     const firestore = fbAdmin.apps[0].firestore();
     const lineCollection = firestore.collection('lines');
+    const key = utils.getRsaKey();
 
     let currentGroup = []; // for each iteration
     const recordGroups = []; // accumulator
@@ -128,9 +128,9 @@ const searchByIndex = async (indexes, frontRange = 0, backRange = 0) => {
         // get lines for current group:
         const group = await lineCollection.where('line', '>=', startLine).where('line', '<=', endLine).get();
         group.forEach(g => {
-            const data = g.data();
-            const decryptedRecord = decryptRecords([data])[0]; 
-            currentGroup.push(decryptedRecord);
+            const record = g.data();
+            record.content = key.decrypt(record.content, 'utf8');
+            currentGroup.push(record);
         });
     }
 
