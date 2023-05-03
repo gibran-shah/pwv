@@ -36,6 +36,51 @@ router.get('/', (req, res, next) => {
     }
 });
 
+router.get('/byLineNum', (req, res) => {
+    const auth = utils.getAuth();
+    if (auth.currentUser) {
+        if (!fbAdmin.apps.length) {
+            utils.initFirebase();
+        }
+
+        const lineNum = parseInt(req.query.lineNum);
+        const count = parseInt(req.query.count);
+        const direction = req.query.direction;
+
+        const firestore = fbAdmin.apps[0].firestore();
+        const lineCollection = firestore.collection('lines');
+        lineCollection.count().get().then(snapshot => {
+            const totalLines = snapshot.data().count;
+            const rangeStart = direction === 'before'
+                ? (lineNum <= 1 ? 0 : (count >= lineNum ? 1 : lineNum - count))
+                : (lineNum < totalLines ? lineNum + 1 : lineNum);
+            const rangeEnd = direction === 'before'
+                ? (lineNum > 1 ? lineNum - 1 : 0)
+                : (lineNum + count > totalLines ? totalLines : lineNum + count);
+            if ((direction === 'before' && rangeEnd === 0)
+              || (direction === 'after' && rangeStart === lineNum)) {
+                res.send([]);
+            } else {
+                lineCollection
+                    .where('line', '>=', rangeStart)
+                    .where('line', '<=', rangeEnd)
+                    .get().then(recordsSnapshot => {
+                        const key = utils.getRsaKey();
+                        const decryptedRecords = [];
+                        recordsSnapshot.forEach(record => {
+                            const data = record.data();
+                            data.content = key.decrypt(data.content, 'utf8');
+                            decryptedRecords.push(data);
+                        });
+                        const sortedRecords = decryptedRecords.sort((r1, r2) => r1.line > r2.line ? 1 : -1);
+                        res.send(sortedRecords);
+                    });
+            }
+        });
+        
+    }
+});
+
 const createIndexes = (recordGroups, searchString) => {
 // https://firebase.google.com/docs/firestore/query-data/queries#node.js
     if (!fbAdmin.apps.length) {

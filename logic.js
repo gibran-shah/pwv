@@ -153,6 +153,22 @@ function createFetchMoreButton(groupNum, isUpper) {
 
 function fetchMore(groupNum, isUpper) {
   const lineNum = getLineNumberByIndex(groupNum, isUpper ? 0 : 'last');
+  ajax(
+    'fetch/byLineNum',
+    'GET',
+    {
+      lineNum,
+      count: 5,
+      direction: isUpper ? 'before' : 'after'
+    },
+    (results) => { processFetchMoreResults(results, groupNum, isUpper); }
+  );
+}
+
+function processFetchMoreResults(results, groupNum, isUpper) {
+  console.log(`results = ${JSON.stringify(results)}`);
+  console.log(`groupNum = ${JSON.stringify(groupNum)}`);
+  console.log(`isUpper = ${JSON.stringify(isUpper)}`);
 }
 
 function getLineNumberByIndex(groupNum, lineIndex) {
