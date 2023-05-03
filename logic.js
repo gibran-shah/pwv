@@ -122,6 +122,7 @@ function showResults(results, searchString) {
         const lineDiv = createLineDiv(group, line, i, j, searchString);
         groupDiv.append(lineDiv);
       }
+      groupDiv.setAttribute('line-count', group.length);
       const lowerFetchMoreBtn = createFetchMoreButton(i, false);
       groupDiv.append(lowerFetchMoreBtn);
       resultsContainer.append(groupDiv);
@@ -144,7 +145,23 @@ function createFetchMoreButton(groupNum, isUpper) {
   fetchMoreBtn.id = `${isUpper ? 'upper' : 'lower'}-fetch-more-btn-${groupNum}`;
   fetchMoreBtn.classList.add('fetch-more-btn');
   fetchMoreBtn.innerHTML = `<img src='assets/images/${isUpper ? 'up-arrow' : 'down-arrow'}.png' />`;
+  fetchMoreBtn.onclick = () => {
+    fetchMore(groupNum, isUpper);
+  };
   return fetchMoreBtn;
+}
+
+function fetchMore(groupNum, isUpper) {
+  const lineNum = getLineNumberByIndex(groupNum, isUpper ? 0 : 'last');
+}
+
+function getLineNumberByIndex(groupNum, lineIndex) {
+  if (lineIndex === 'last') {
+    const groupContainer = document.querySelector(`#results-group-container-${groupNum}`);
+    lineIndex = parseInt(groupContainer.getAttribute('line-count')) - 1;
+  }
+  const lineElm = document.querySelector(`#result-line-container-${groupNum}-${lineIndex}`);
+  return parseInt(lineElm.querySelector('.line-number-span').innerHTML);
 }
 
 function createLineDiv(group, line, groupNum, lineNum, searchString) {
