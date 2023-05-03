@@ -115,11 +115,15 @@ function showResults(results, searchString) {
     for (let i = 0; i < results.length; i++) {
       const group = results[i];
       const groupDiv = createGroupDiv(i);
+      const upperFetchMoreBtn = createFetchMoreButton(i, true);
+      groupDiv.append(upperFetchMoreBtn);
       for (let j = 0; j < group.length; j++) {
         const line = group[j];
         const lineDiv = createLineDiv(group, line, i, j, searchString);
         groupDiv.append(lineDiv);
       }
+      const lowerFetchMoreBtn = createFetchMoreButton(i, false);
+      groupDiv.append(lowerFetchMoreBtn);
       resultsContainer.append(groupDiv);
     }
   } else {
@@ -133,6 +137,14 @@ function createGroupDiv(groupNum) {
   groupDiv.id = `results-group-container-${groupNum}`;
   groupDiv.classList.add('results-group-container');
   return groupDiv;
+}
+
+function createFetchMoreButton(groupNum, isUpper) {
+  const fetchMoreBtn = document.createElement('button');
+  fetchMoreBtn.id = `${isUpper ? 'upper' : 'lower'}-fetch-more-btn-${groupNum}`;
+  fetchMoreBtn.classList.add('fetch-more-btn');
+  fetchMoreBtn.innerHTML = `<img src='assets/images/${isUpper ? 'up-arrow' : 'down-arrow'}.png' />`;
+  return fetchMoreBtn;
 }
 
 function createLineDiv(group, line, groupNum, lineNum, searchString) {
