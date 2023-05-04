@@ -122,10 +122,10 @@ function showResults(results, searchString) {
         const lineDiv = createLineDiv(line, i, j, searchString);
         groupDiv.append(lineDiv);
       }
-      groupDiv.setAttribute('line-count', group.length);
       const lowerFetchMoreBtn = createFetchMoreButton(i, false);
       groupDiv.append(lowerFetchMoreBtn);
       resultsContainer.append(groupDiv);
+      setLineIdsAndLineCount(i);
     }
   } else {
     const noResultsDiv = createNoResultsDiv();
@@ -200,7 +200,6 @@ function getLineNumberByIndex(groupNum, lineIndex) {
 
 function createLineDiv(line, groupNum, lineNum, searchString) {
   const lineDiv = document.createElement('div');
-  lineDiv.id = `result-line-container-${groupNum}-${lineNum}`;
   lineDiv.classList.add('results-line-container');
 
   const numberDiv = document.createElement('div');
