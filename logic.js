@@ -176,7 +176,52 @@ function processFetchMoreResults(results, groupNum, isUpper) {
     fetchMoreBtn.parentNode.insertBefore(newLine, insertBeforeMe);
   }
 
+  const neighboringGroupNum = groupNum + (isUpper ? -1 : 1);
+  if (shouldMergeGroups(groupNum, neighboringGroupNum)) {
+    mergeGroups(groupNum, neighboringGroupNum);
+  }
+
   setLineIdsAndLineCount(groupNum);
+}
+
+function shouldMergeGroups(groupNum, neighboringGroupNum) {
+  const neighboringGroup = document.querySelector(`#results-group-container-${neighboringGroupNum}`);
+  
+  if (!neighboringGroup) {
+    return false;
+  }
+
+  const group = document.querySelector(`#results-group-container-${groupNum}`);
+
+  if (groupNum < neighboringGroupNum) {
+    const lastLineNumInGroup = parseInt(
+      document.querySelector(
+        `#results-group-container-${groupNum} .results-line-container:last-of-type .line-number-span`
+      ).innerHTML
+    );
+    const firstLineNumInNeighboringGroup = parseInt(
+      document.querySelector(
+        `#results-group-container-${neighboringGroupNum} .results-line-container:first-of-type .line-number-span`
+      ).innerHTML
+    );
+    return lastLineNumInGroup >= firstLineNumInNeighboringGroup;
+  } else {
+    const firstLineNumInGroup = parseInt(
+      document.querySelector(
+        `#results-group-container-${groupNum} .results-line-container:first-of-type .line-number-span`
+      ).innerHTML
+    );
+    const lastLineNumInNeighboringGroup = parseInt(
+      document.querySelector(
+        `#results-group-container-${neighboringGroupNum} .results-line-container:last-of-type .line-number-span`
+      ).innerHTML
+    );
+    return firstLineNumInGroup <= lastLineNumInNeighboringGroup;
+  }
+}
+
+function mergeGroups(groupNum, neighboringGroupNum) {
+  console.log(`merging groups ${groupNum} and ${neighboringGroupNum}`);
 }
 
 function setLineIdsAndLineCount(groupNum) {
