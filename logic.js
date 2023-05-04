@@ -119,7 +119,7 @@ function showResults(results, searchString) {
       groupDiv.append(upperFetchMoreBtn);
       for (let j = 0; j < group.length; j++) {
         const line = group[j];
-        const lineDiv = createLineDiv(group, line, i, j, searchString);
+        const lineDiv = createLineDiv(line, i, j, searchString);
         groupDiv.append(lineDiv);
       }
       groupDiv.setAttribute('line-count', group.length);
@@ -166,9 +166,27 @@ function fetchMore(groupNum, isUpper) {
 }
 
 function processFetchMoreResults(results, groupNum, isUpper) {
-  console.log(`results = ${JSON.stringify(results)}`);
-  console.log(`groupNum = ${JSON.stringify(groupNum)}`);
-  console.log(`isUpper = ${JSON.stringify(isUpper)}`);
+  const lines = JSON.parse(results);
+  const fetchMoreBtn = document.querySelector(`#${isUpper ? 'upper' : 'lower'}-fetch-more-btn-${groupNum}`);
+  const insertBeforeMe = isUpper ? fetchMoreBtn.nextSibling : fetchMoreBtn;
+  const searchString = document.querySelector(`#search-container input`).value;
+
+  for (let i = 0; i < lines.length; i++) {
+    const newLine = createLineDiv(lines[i], groupNum, i, searchString);
+    fetchMoreBtn.parentNode.insertBefore(newLine, insertBeforeMe);
+  }
+
+  setLineIdsAndLineCount(groupNum);
+}
+
+function setLineIdsAndLineCount(groupNum) {
+  const lineElements = document.querySelectorAll(`#results-group-container-${groupNum} .results-line-container`);
+  for (let i = 0; i < lineElements.length; i++) {
+    const line = lineElements[i];
+    line.id = `result-line-container-${groupNum}-${i}`;
+  }
+  const groupDiv = document.querySelector(`#results-group-container-${groupNum}`);
+  groupDiv.setAttribute('line-count', lineElements.length);
 }
 
 function getLineNumberByIndex(groupNum, lineIndex) {
@@ -180,7 +198,7 @@ function getLineNumberByIndex(groupNum, lineIndex) {
   return parseInt(lineElm.querySelector('.line-number-span').innerHTML);
 }
 
-function createLineDiv(group, line, groupNum, lineNum, searchString) {
+function createLineDiv(line, groupNum, lineNum, searchString) {
   const lineDiv = document.createElement('div');
   lineDiv.id = `result-line-container-${groupNum}-${lineNum}`;
   lineDiv.classList.add('results-line-container');
