@@ -221,7 +221,46 @@ function shouldMergeGroups(groupNum, neighboringGroupNum) {
 }
 
 function mergeGroups(groupNum, neighboringGroupNum) {
-  console.log(`merging groups ${groupNum} and ${neighboringGroupNum}`);
+  const group = document.querySelector(`#results-group-container-${groupNum}`);
+  const neighboringGroup = document.querySelector(`#results-group-container-${neighboringGroupNum}`);
+
+  let neighboringGroupLines = Array.from(neighboringGroup.querySelectorAll(`.results-line-container`));
+
+  if (groupNum < neighboringGroupNum) {
+    const lastLineNumInGroup = group.querySelector(
+      `.results-line-container:last-of-type .line-number-span`
+    ).innerHTML;
+    let currentLineNumInNeighboringGroup = '';
+    while (lastLineNumInGroup !== currentLineNumInNeighboringGroup) {
+      currentLineNumInNeighboringGroup = neighboringGroupLines[0].querySelector('.line-number-span').innerHTML;
+      neighboringGroupLines[0].parentNode.removeChild(neighboringGroupLines[0]); // remove from DOM
+      neighboringGroupLines = neighboringGroupLines.splice(1); // remove from array
+    }
+    const lowerFetchMoreBtn = group.querySelector(`#lower-fetch-more-btn-${groupNum}`);
+    for (let i = 0; i < neighboringGroupLines.length; i++) {
+      const line = neighboringGroupLines[i];
+      lowerFetchMoreBtn.parentNode.insertBefore(line, lowerFetchMoreBtn);
+    }
+    neighboringGroup.remove();
+  } else {
+    const firstLineNumInGroup = group.querySelector(
+      `.results-line-container:first-of-type .line-number-span`
+    ).innerHTML;
+    let currentLineNumInNeighboringGroup = '';
+    let lastIndex = neighboringGroupLines.length - 1;
+    while (firstLineNumInGroup !== currentLineNumInNeighboringGroup) {
+      currentLineNumInNeighboringGroup = neighboringGroupLines[lastIndex].querySelector('.line-number-span').innerHTML;
+      neighboringGroupLines[lastIndex].parentNode.removeChild(neighboringGroupLines[lastIndex]); // remove from DOM
+      neighboringGroupLines.splice(lastIndex, 1); // remove from array
+      lastIndex--;
+    }
+    const upperFetchMoreBtn = group.querySelector(`#upper-fetch-more-btn-${groupNum}`);
+    for (let i = lastIndex; i >= 0; i--) {
+      const line = neighboringGroupLines[i];
+      upperFetchMoreBtn.parentNode.insertBefore(line, upperFetchMoreBtn.nextSibling);
+    }
+    neighboringGroup.remove();
+  }
 }
 
 function setLineIdsAndLineCount(groupNum) {
