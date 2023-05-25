@@ -27,6 +27,7 @@
 
         <!-- in -->
         <div id="signed-in-container">
+
             <div id="content-container">
                 <div id="search-add-sign-out-container">
                     <div id="search-container">
@@ -40,6 +41,22 @@
                     </div>
                 </div>
                 <div id="search-results-container"></div>
+            </div>
+
+            <div id="add-lines-backdrop">
+                <div id="add-lines-modal">
+                    <div id="add-lines-modal-header">
+                        <h2>Add Lines</h2>
+                        <div id="close-add-lines-btn" onclick="closeAddLinesModal()"></div>
+                    </div>
+                    <div id="add-lines-modal-body">
+                        <textarea id="new-lines-textarea"></textarea>
+                    </div>
+                    <div id="add-lines-modal-btns-container">
+                        <button id="cancel" onclick="closeAddLinesModal()">Cancel</button>
+                        <button id="add" onclick="submitNewLines()">Add</button>
+                    </div>
+                </div>
             </div>
         </div>
 

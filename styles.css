@@ -55,6 +55,8 @@ body {
     display: flex;
     flex-direction: row;
     justify-content: center;
+
+    position: relative;
 }
 
 #content-container {
@@ -171,4 +173,98 @@ body {
     text-align: center;
     border-color: rgb(0, 200, 0);
     cursor: pointer;
+}
+
+#add-lines-backdrop {
+    width: 100%;
+    height: 100vh;
+
+    background-color: rgba(0, 0, 0, .5);
+
+    display: none; /* default */
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+
+    position: absolute;
+    left: 0;
+    top: 0;
+}
+
+#add-lines-modal {
+    width: 50%;
+    min-width: 500px;
+
+    border: 5px solid black;
+    background-color: white;
+    
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+}
+
+#add-lines-modal-header {
+    width: 90%;
+    height: 40px;
+    margin: 0 auto;
+
+    border-bottom: 1px solid black;
+
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#close-add-lines-btn {
+    background: url(assets/images/close-modal-btn.png) no-repeat;
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+}
+
+#add-lines-modal-body {
+    width: 90%;
+    margin: 0 auto;
+    padding: 20px 0;
+
+    border-bottom: 1px solid black;
+}
+
+#new-lines-textarea {
+    width: 100%;
+    height: 300px;
+    padding: 0;
+    margin: 0;
+    resize: none;
+}
+
+#add-lines-modal-btns-container {
+    width: 90%;
+    height: 80px;
+    margin: 0 auto;
+
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+}
+
+#add-lines-modal-btns-container button {
+    width: 80px;
+    height: 25px;
+    border-radius: 0;
+    cursor: pointer;
+}
+
+#add-lines-modal-btns-container #add {
+    border: 1px solid blue;
+    background-color: blue;
+    color: white;
+}
+
+#add-lines-modal-btns-container #cancel {
+    border: 1px solid blue;
+    background-color: white;
+    color: blue;
 }

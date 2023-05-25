@@ -37,12 +37,40 @@ function search() {
 }
 
 function add() {
-  console.log('add!!!');
-    // const payload = {
-    //   content: [ 'abc123', 'hello,s,u,g,a,r' ]
-    // };
-    // payload.content = encodeCommas(payload.content);
-    // ajax('add', 'POST', payload);
+  // disable scrolling on page
+  const body = document.querySelector('body');
+  body.style.height = '100vh';
+  body.style['overflow-y'] = 'hidden';
+
+  // bring add lines modal into view:
+  const addLinesBackdrop = document.querySelector('#add-lines-backdrop');
+  addLinesBackdrop.style.display = 'flex';
+}
+
+function submitNewLines() {
+  const lines = document.querySelector('#new-lines-textarea').value;
+  const payload = {
+    content: lines.split('\n')
+  };
+  payload.content = encodeCommas(payload.content);
+  ajax('add', 'POST', payload, function() {
+    console.log('lines added'); // replace with toast message
+    closeAddLinesModal();
+  });
+}
+
+function closeAddLinesModal() {
+    // hide modal:
+    const addLinesBackdrop = document.querySelector('#add-lines-backdrop');
+    addLinesBackdrop.style.display = 'none';
+
+    // enable scrolling on page
+    const body = document.querySelector('body');
+    body.style.height = '';
+    body.style['overflow-y'] = '';
+  
+    const textarea = document.querySelector('#new-lines-textarea');
+    textarea.value = '';
 }
 
 function signIn() {
