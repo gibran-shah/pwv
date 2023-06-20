@@ -94,7 +94,7 @@ const createIndexes = (recordGroups, searchString) => {
     const encryptedIdsToIndex = encryptIdsToIndex(idsToIndex);
 
     return indexesRef.doc().set({
-        searchString,
+        searchString: searchString.toLowerCase(),
         lineIds: encryptedIdsToIndex
     }).then(() => recordGroups.map(rg => rg.map(r => ({
         line: r.line,
