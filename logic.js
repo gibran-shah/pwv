@@ -54,7 +54,7 @@ function submitNewLines() {
   };
   payload.content = encodeCommas(payload.content);
   ajax('add', 'POST', payload, function() {
-    console.log('lines added'); // replace with toast message
+    displaySuccessMessage('Lines added successfully');
     closeAddLinesModal();
   });
 }
@@ -344,6 +344,22 @@ function encodeCommas(array) {
     newArray.push(array[i].replace(regex, '&comma;'));
   }
   return newArray;
+}
+
+function displaySuccessMessage(message) {
+  const messageContainer = document.querySelector('#message-container');
+  const successMessage = document.querySelector('#success-message');
+
+  successMessage.innerHTML = message;
+  successMessage.classList.remove('hide');
+  messageContainer.classList.add('on-screen');
+
+  setTimeout(function() {
+    messageContainer.classList.remove('on-screen');
+    setTimeout(function() {
+      successMessage.classList.add('hide');
+    }, 1000);
+  }, 5000);
 }
 
 function ajax(endpoint, method, payload, callback) {

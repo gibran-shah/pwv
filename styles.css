@@ -268,3 +268,33 @@ body {
     background-color: white;
     color: blue;
 }
+
+#message-container {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    position: absolute;
+    top: -30px;
+    left: 0;
+    transition: top .5s;
+}
+
+#message-container.on-screen {
+    top: 0;
+}
+
+.message {
+    width: 200px;
+    height: 30px;
+    color: white;
+    
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+.hide {
+    display: none;
+}
