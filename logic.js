@@ -56,6 +56,9 @@ function submitNewLines() {
   ajax('add', 'POST', payload, function() {
     displaySuccessMessage('Lines added successfully');
     closeAddLinesModal();
+  }, function() {
+    displayErrorMessage('Error adding lines');
+    closeAddLinesModal();
   });
 }
 
@@ -362,7 +365,23 @@ function displaySuccessMessage(message) {
   }, 5000);
 }
 
-function ajax(endpoint, method, payload, callback) {
+function displayErrorMessage(message) {
+  const messageContainer = document.querySelector('#message-container');
+  const errorMessage = document.querySelector('#error-message');
+
+  errorMessage.innerHTML = message;
+  errorMessage.classList.remove('hide');
+  messageContainer.classList.add('on-screen');
+
+  setTimeout(function() {
+    messageContainer.classList.remove('on-screen');
+    setTimeout(function() {
+      errorMessage.classList.add('hide');
+    }, 1000);
+  }, 5000);
+}
+
+function ajax(endpoint, method, payload, callback, errorCallback) {
   const xhttp = new XMLHttpRequest();
   const params = payload ? new URLSearchParams(payload) : null;
   const url = 'http://localhost:3000/' + endpoint + (params ? `?${params}` : '');
@@ -375,6 +394,9 @@ function ajax(endpoint, method, payload, callback) {
         }
       } else {
         console.log('error: ', JSON.stringify(this));
+        if (errorCallback) {
+          errorCallback(this.response);
+        }
       }
     }  
   };
