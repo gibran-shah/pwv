@@ -14,7 +14,11 @@ const utils = {
         initializeFirebase();
     },
 
-    getRsaKey: () => new rsa(`${process.env.SECRET_RSA_KEY}`, 'pkcs8')
+    getRsaKey: () => new rsa(`${process.env.SECRET_RSA_KEY}`, 'pkcs8'),
+
+    decrypt: (content) => utils.getRsaKey().decrypt(content, 'utf8'),
+
+    encrypt: (content) => utils.getRsaKey().encrypt(content, 'base64')
 }
 
 const getAppByApiKey = function() {
