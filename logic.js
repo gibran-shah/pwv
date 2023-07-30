@@ -329,6 +329,20 @@ function createLineDiv(line, groupNum, lineNum, searchString) {
   contentDiv.innerHTML = `<span class='line-content-span'>${line.content}</span>`;
   lineDiv.append(contentDiv);
 
+  const deleteDiv = document.createElement('div');
+  deleteDiv.classList.add('delete-line-container');
+  deleteDiv.classList.add('hide');
+  deleteDiv.innerHTML = `<img src="assets/images/trash-btn.png" class="delete-line-btn" onclick="deleteLineClicked()">`;
+  lineDiv.append(deleteDiv);
+
+  lineDiv.addEventListener('mouseover', function() {
+    deleteDiv.classList.remove('hide');
+  });
+
+  lineDiv.addEventListener('mouseout', function() {
+    deleteDiv.classList.add('hide');
+  });
+
   return lineDiv;
 }
 
@@ -379,6 +393,10 @@ function displayErrorMessage(message) {
       errorMessage.classList.add('hide');
     }, 1000);
   }, 5000);
+}
+
+function deleteLineClicked() {
+  console.log('delete line clicked');
 }
 
 function ajax(endpoint, method, payload, callback, errorCallback) {
