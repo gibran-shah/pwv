@@ -1,3 +1,5 @@
+let lineToDelete = null;
+
 function pageLoad() {
   if (isSignedIn()) {
     renderSignedInContainer();
@@ -37,14 +39,31 @@ function search() {
 }
 
 function add() {
+  openModal('add');
+}
+
+function openModal(modal, data) {
   // disable scrolling on page
   const body = document.querySelector('body');
   body.style.height = '100vh';
   body.style['overflow-y'] = 'hidden';
 
-  // bring add lines modal into view:
-  const addLinesBackdrop = document.querySelector('#add-lines-backdrop');
-  addLinesBackdrop.style.display = 'flex';
+  // bring modal into view:
+  let backdrop;
+  switch (modal) {
+    case 'add':
+      backdrop = document.querySelector('#add-lines-backdrop');
+      break;
+    case 'delete':
+      backdrop = document.querySelector('#delete-line-backdrop');
+      const modalBody = backdrop.querySelector('.modal-body');
+      modalBody.innerHTML = modalBody.innerHTML.replace('[line-num]', data.lineNum);
+      break;
+    default:
+      console.log(`ERROR: Unknown modal: ${modal}`);
+      return;
+  }; 
+  backdrop.style.display = 'flex';
 }
 
 function submitNewLines() {
@@ -55,25 +74,35 @@ function submitNewLines() {
   payload.content = encodeCommas(payload.content);
   ajax('add', 'POST', payload, function() {
     displaySuccessMessage('Lines added successfully');
-    closeAddLinesModal();
+    closeModal('add');
   }, function() {
     displayErrorMessage('Error adding lines');
-    closeAddLinesModal();
+    closeModal('add');
   });
 }
 
-function closeAddLinesModal() {
-    // hide modal:
-    const addLinesBackdrop = document.querySelector('#add-lines-backdrop');
-    addLinesBackdrop.style.display = 'none';
+function closeModal(modal) {
+  let backdrop;
+  switch (modal) {
+    case 'add':
+      backdrop = document.querySelector('#add-lines-backdrop');
+      const textarea = document.querySelector('#new-lines-textarea');
+      textarea.value = '';
+      break;
+    case 'delete':
+      backdrop = document.querySelector('#delete-line-backdrop');
+      break;
+    default:
+      console.log(`ERROR: Unknown modal: ${modal}.`);
+      return;
+  };
 
-    // enable scrolling on page
-    const body = document.querySelector('body');
-    body.style.height = '';
-    body.style['overflow-y'] = '';
-  
-    const textarea = document.querySelector('#new-lines-textarea');
-    textarea.value = '';
+  backdrop.style.display = 'none';
+
+  // enable scrolling on page
+  const body = document.querySelector('body');
+  body.style.height = '';
+  body.style['overflow-y'] = '';
 }
 
 function signIn() {
@@ -332,7 +361,7 @@ function createLineDiv(line, groupNum, lineNum, searchString) {
   const deleteDiv = document.createElement('div');
   deleteDiv.classList.add('delete-line-container');
   deleteDiv.classList.add('hide');
-  deleteDiv.innerHTML = `<img src="assets/images/trash-btn.png" class="delete-line-btn" onclick="deleteLineClicked()">`;
+  deleteDiv.innerHTML = `<img src="assets/images/trash-btn.png" class="delete-line-btn" onclick="deleteLineClicked(${line.line})">`;
   lineDiv.append(deleteDiv);
 
   lineDiv.addEventListener('mouseover', function() {
@@ -395,8 +424,14 @@ function displayErrorMessage(message) {
   }, 5000);
 }
 
-function deleteLineClicked() {
-  console.log('delete line clicked');
+function deleteLineClicked(lineNum) {
+  console.log(`lineNum = ${lineNum}`);
+  lineToDelete = lineNum;
+  openModal('delete', { lineNum });
+}
+
+function deleteLine() {
+  console.log(`deleting line ${lineToDelete}`);
 }
 
 function ajax(endpoint, method, payload, callback, errorCallback) {

@@ -176,7 +176,7 @@ body {
     cursor: pointer;
 }
 
-#add-lines-backdrop {
+.modal-backdrop {
     width: 100%;
     height: 100vh;
 
@@ -192,7 +192,7 @@ body {
     top: 0;
 }
 
-#add-lines-modal {
+.modal-box {
     width: 50%;
     min-width: 500px;
 
@@ -204,7 +204,7 @@ body {
     justify-content: flex-start;
 }
 
-#add-lines-modal-header {
+.modal-header {
     width: 90%;
     height: 40px;
     margin: 0 auto;
@@ -217,14 +217,14 @@ body {
     align-items: center;
 }
 
-#close-add-lines-btn {
+.close-modal-btn {
     background: url(assets/images/close-modal-btn.png) no-repeat;
     width: 20px;
     height: 20px;
     cursor: pointer;
 }
 
-#add-lines-modal-body {
+.modal-body {
     width: 90%;
     margin: 0 auto;
     padding: 20px 0;
@@ -240,7 +240,7 @@ body {
     resize: none;
 }
 
-#add-lines-modal-btns-container {
+.modal-btns-container {
     width: 90%;
     height: 80px;
     margin: 0 auto;
@@ -251,20 +251,20 @@ body {
     align-items: center;
 }
 
-#add-lines-modal-btns-container button {
+.modal-btns-container button {
     width: 80px;
     height: 25px;
     border-radius: 0;
     cursor: pointer;
 }
 
-#add-lines-modal-btns-container #add {
+.primary-btn {
     border: 1px solid blue;
     background-color: blue;
     color: white;
 }
 
-#add-lines-modal-btns-container #cancel {
+.secondary-btn {
     border: 1px solid blue;
     background-color: white;
     color: blue;
@@ -311,4 +311,20 @@ body {
 .delete-line-btn {
     cursor: pointer;
     opacity: .5;
+}
+
+#delete-line-backdrop {
+    width: 100%;
+    height: 100vh;
+
+    background-color: rgba(0, 0, 0, .5);
+
+    display: none; /* default */
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+
+    position: absolute;
+    left: 0;
+    top: 0;
 }

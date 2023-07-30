@@ -53,18 +53,34 @@
                 <div id="search-results-container"></div>
             </div>
 
-            <div id="add-lines-backdrop">
-                <div id="add-lines-modal">
-                    <div id="add-lines-modal-header">
+            <div id="add-lines-backdrop" class="modal-backdrop">
+                <div class="modal-box">
+                    <div class="modal-header">
                         <h2>Add Lines</h2>
-                        <div id="close-add-lines-btn" onclick="closeAddLinesModal()"></div>
+                        <div class="close-modal-btn" onclick="closeModal('add')"></div>
                     </div>
-                    <div id="add-lines-modal-body">
+                    <div class="modal-body">
                         <textarea id="new-lines-textarea"></textarea>
                     </div>
-                    <div id="add-lines-modal-btns-container">
-                        <button id="cancel" onclick="closeAddLinesModal()">Cancel</button>
-                        <button id="add" onclick="submitNewLines()">Add</button>
+                    <div class="modal-btns-container">
+                        <button class="secondary-btn" onclick="closeModal('add')">Cancel</button>
+                        <button class="primary-btn" onclick="submitNewLines()">Add</button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="delete-line-backdrop" class="modal-backdrop">
+                <div class="modal-box">
+                    <div class="modal-header">
+                        <h2>Delete Line?</h2>
+                        <div class="close-modal-btn" onclick="closeModal('delete')"></div>
+                    </div>
+                    <div class="modal-body">
+                        Are you sure you want to delete line #[line-num]?
+                    </div>
+                    <div class="modal-btns-container">
+                        <button class="secondary-btn" onclick="closeModal('delete')">No</button>
+                        <button class="primary-btn" onclick="deleteLine()">Yes</button>
                     </div>
                 </div>
             </div>
