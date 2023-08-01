@@ -6,6 +6,7 @@ const importRoutes = require('./routes/import');
 const addRoutes = require('./routes/add');
 const fetchRoutes = require('./routes/fetch');
 const authRoutes = require('./routes/auth');
+const deleteRoutes = require('./routes/delete');
 
 dotenv.config();
 
@@ -35,6 +36,7 @@ app.use('/import', importRoutes);
 app.use('/add', addRoutes);
 app.use('/fetch', fetchRoutes);
 app.use('/auth', authRoutes);
+app.use('/delete', deleteRoutes);
 
 app.listen(port);
 

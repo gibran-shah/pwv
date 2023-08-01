@@ -431,7 +431,19 @@ function deleteLineClicked(lineNum) {
 }
 
 function deleteLine() {
-  console.log(`deleting line ${lineToDelete}`);
+  ajax(
+    'delete',
+    'delete',
+    { lineToDelete },
+    () => {
+      displaySuccessMessage('Line deleted Successfully.');
+      closeModal('delete');
+    },
+    () => {
+      displayErrorMessage('An error occurred when attempting to delete the line.');
+      closeModal('delete');
+    }
+  );
 }
 
 function ajax(endpoint, method, payload, callback, errorCallback) {
