@@ -28,13 +28,44 @@ function deleteLine(lineNum) {
 
     const firestore = fbAdmin.apps[0].firestore();
     return firestore.collection('lines').where('line', '==', parseInt(lineNum, 10)).get().then((snapshot) => {
-        let deleted = false;
+        let line = null;
         snapshot.forEach(doc => {
+            line = {
+                data: doc.data(),
+                id: doc.id
+            };
             doc.ref.delete();
-            deleted = true;
         });
-        return deleted;
-    })
+        if (!line) {
+            res.status(500).send('Failed to delete line.');
+        } else {
+            return line;
+        }
+    }).then(line => {
+        if (line) {
+            return firestore.collection('indexes').get().then(snapshot => {
+                let batch = firestore.batch();
+                snapshot.forEach(doc => {
+                    const d = doc.data();
+                    const decryptedContent = utils.decrypt(line.data.content);
+                    if (decryptedContent.includes(d.searchString)) {
+                        for (let i = 0; i < d.lineIds.length; i++) {
+                            const lineId = d.lineIds[i];
+                            const decryptedLineId = utils.decrypt(lineId);
+                            if (decryptedLineId === line.id) {
+                                d.lineIds.splice(i, 1);
+                                batch.set(doc.ref, d);
+                                i--;
+                            }
+                        }
+                    }
+                });
+                return batch.commit();
+            });
+        } else {
+            return null;
+        }
+    });
 }
 
 module.exports = router;
