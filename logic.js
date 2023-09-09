@@ -4,6 +4,7 @@ function pageLoad() {
   if (isSignedIn()) {
     renderSignedInContainer();
     wireElements();
+    //importFile();
   } else {
     renderSignedOutContainer();
     const username = document.getElementById('username');
@@ -425,7 +426,6 @@ function displayErrorMessage(message) {
 }
 
 function deleteLineClicked(lineNum) {
-  console.log(`lineNum = ${lineNum}`);
   lineToDelete = lineNum;
   openModal('delete', { lineNum });
 }
@@ -438,12 +438,33 @@ function deleteLine() {
     () => {
       displaySuccessMessage('Line deleted Successfully.');
       closeModal('delete');
+      deleteLineOnFrontEnd();
     },
     () => {
       displayErrorMessage('An error occurred when attempting to delete the line.');
       closeModal('delete');
     }
   );
+}
+
+function deleteLineOnFrontEnd() {
+  let found = false;
+  const lineSpanElements = document.querySelectorAll('.line-number-span');
+  for (let i = 0; i < lineSpanElements.length; i++) {
+    if (found) {
+      let lineNum = parseInt(lineSpanElements[i].innerHTML, 10);
+      lineNum--;
+      lineSpanElements[i].innerHTML = lineNum;
+    } else if (lineSpanElements[i].innerHTML == lineToDelete) {
+      const lineElement = lineSpanElements[i].parentElement.parentElement;
+      const lineGroupElement = lineElement.parentElement;
+      lineElement.remove();
+      const tokens = lineGroupElement.id.split('-');
+      const groupNum = tokens[tokens.length - 1];
+      setLineIdsAndLineCount(groupNum);
+      found = true;
+    }
+  }
 }
 
 function ajax(endpoint, method, payload, callback, errorCallback) {

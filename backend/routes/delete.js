@@ -60,8 +60,25 @@ function deleteLine(lineNum) {
                         }
                     }
                 });
-                return batch.commit();
+                batch.commit();
+                return line;
             });
+        } else {
+            return null;
+        }
+    }).then(line => {
+        if (line) {
+            return firestore.collection('lines')
+                .where('line', '>', line.data.line)
+                .get().then(snapshot => {
+                    let batch = firestore.batch();
+                    snapshot.forEach(doc => {
+                        const d = doc.data();
+                        d.line--;
+                        batch.set(doc.ref, d);
+                    });
+                    return batch.commit();
+                });
         } else {
             return null;
         }
