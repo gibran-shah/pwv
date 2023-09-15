@@ -356,6 +356,7 @@ function createLineDiv(line, groupNum, lineNum, searchString) {
 
   const contentDiv = document.createElement('div');
   contentDiv.classList.add('line-content-container');
+  contentDiv.ondblclick = function(e) { lineContentDblClicked(e.target); };
   contentDiv.innerHTML = `<span class='line-content-span'>${line.content}</span>`;
   lineDiv.append(contentDiv);
 
@@ -374,6 +375,49 @@ function createLineDiv(line, groupNum, lineNum, searchString) {
   });
 
   return lineDiv;
+}
+
+function lineContentDblClicked(contentDiv) {
+  const span = contentDiv.querySelector('span');
+  span.classList.add('hide');
+
+  // First, see if there's an input container already active and remove it:
+  const inputContainerInstance = document.querySelector('#input-container-instance');
+  if (inputContainerInstance) {
+    const contentSpan = inputContainerInstance.parentElement.querySelector('.line-content-span');
+    inputContainerInstance.remove();
+    contentSpan.classList.remove('hide');
+  }
+
+  // Copy input container template and append it to contentDiv:
+  const inputContainer = document.querySelector('.line-edit-input-container').cloneNode(true);
+  inputContainer.classList.remove('hide');
+  inputContainer.id = 'input-container-instance';
+  contentDiv.append(inputContainer);
+
+  const input = inputContainer.querySelector('input');
+  input.value = removeSpanForEdit(span.innerHTML);
+
+  const lineNum = contentDiv.parentElement.querySelector('.line-number-span').innerHTML;
+  const actionButtons = inputContainer.querySelectorAll('span');
+  actionButtons[0].onclick = function() { commitEdit(lineNum, input.value); };
+  actionButtons[1].onclick = function() { cancelEdit(inputContainer, span); };
+}
+
+function commitEdit(lineNum, lineContent) {
+  console.log(`lineNum: ${JSON.stringify(lineNum)}`);
+  console.log(`lineContent: ${lineContent}`);
+}
+
+function cancelEdit(inputContainer, span) {
+  inputContainer.remove();
+  span.classList.remove('hide');
+}
+
+function removeSpanForEdit(content) {
+  let modifiedContent = content.replace('<span class="search-string-instance">', '');
+  modifiedContent = modifiedContent.replace('</span>', '');
+  return modifiedContent;
 }
 
 function createNoResultsDiv() {
