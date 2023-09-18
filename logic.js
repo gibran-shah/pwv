@@ -1,4 +1,5 @@
 let lineToDelete = null;
+let searchString = '';
 
 function pageLoad() {
   if (isSignedIn()) {
@@ -32,7 +33,7 @@ function importFile() {
 }
 
 function search() {
-    const searchString = document.querySelector('#search-container input').value;
+    searchString = document.querySelector('#search-container input').value;
     ajax('fetch', 'GET', { searchString: searchString }, (response) => {
       const parsedResponse = JSON.parse(response);
       showResults(parsedResponse, searchString);
@@ -351,8 +352,7 @@ function createLineDiv(line, groupNum, lineNum, searchString) {
   numberDiv.innerHTML = `<span class='line-number-span'>${line.line}</span>`;
   lineDiv.append(numberDiv);
 
-  const regex = new RegExp(searchString, 'gi');
-  line.content = line.content.replace(regex, `<span class='search-string-instance'>$&</span>`);
+  line.content = highlightSearchString(line.content);
 
   const contentDiv = document.createElement('div');
   contentDiv.classList.add('line-content-container');
@@ -375,6 +375,11 @@ function createLineDiv(line, groupNum, lineNum, searchString) {
   });
 
   return lineDiv;
+}
+
+function highlightSearchString(content) {
+  const regex = new RegExp(searchString, 'gi');
+  return content.replace(regex, `<span class='search-string-instance'>$&</span>`);
 }
 
 function lineContentDblClicked(contentDiv) {
@@ -432,7 +437,7 @@ function doPostEditWork(lineNum, lineContent) {
   const lineNumSpan = lineNumSpans.find(s => s.innerHTML === lineNum);
   const resultsLineContainer = lineNumSpan.parentElement.parentElement;
   const contentSpan = resultsLineContainer.querySelector('.line-content-span');
-  contentSpan.innerHTML = lineContent;
+  contentSpan.innerHTML = highlightSearchString(lineContent);
 
   const inputContainer = resultsLineContainer.querySelector('.line-edit-input-container');
   inputContainer.remove();
