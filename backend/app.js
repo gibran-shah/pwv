@@ -7,6 +7,7 @@ const addRoutes = require('./routes/add');
 const fetchRoutes = require('./routes/fetch');
 const authRoutes = require('./routes/auth');
 const deleteRoutes = require('./routes/delete');
+const updateRoutes = require('./routes/update');
 
 dotenv.config();
 
@@ -37,6 +38,7 @@ app.use('/add', addRoutes);
 app.use('/fetch', fetchRoutes);
 app.use('/auth', authRoutes);
 app.use('/delete', deleteRoutes);
+app.use('/update', updateRoutes);
 
 app.listen(port);
 

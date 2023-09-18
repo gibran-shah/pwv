@@ -405,13 +405,38 @@ function lineContentDblClicked(contentDiv) {
 }
 
 function commitEdit(lineNum, lineContent) {
-  console.log(`lineNum: ${JSON.stringify(lineNum)}`);
-  console.log(`lineContent: ${lineContent}`);
+  const payload = {
+    lineNum, lineContent
+  };
+
+  ajax(
+    'update',
+    'patch',
+    payload,
+    () => {
+      doPostEditWork(lineNum, lineContent);
+    },
+    () => {
+      console.log('failure');
+    }
+  );
 }
 
 function cancelEdit(inputContainer, span) {
   inputContainer.remove();
   span.classList.remove('hide');
+}
+
+function doPostEditWork(lineNum, lineContent) {
+  const lineNumSpans = Array.from(document.querySelectorAll('.line-number-span'));
+  const lineNumSpan = lineNumSpans.find(s => s.innerHTML === lineNum);
+  const resultsLineContainer = lineNumSpan.parentElement.parentElement;
+  const contentSpan = resultsLineContainer.querySelector('.line-content-span');
+  contentSpan.innerHTML = lineContent;
+
+  const inputContainer = resultsLineContainer.querySelector('.line-edit-input-container');
+  inputContainer.remove();
+  contentSpan.classList.remove('hide');
 }
 
 function removeSpanForEdit(content) {
@@ -530,7 +555,7 @@ function ajax(endpoint, method, payload, callback, errorCallback) {
       }
     }  
   };
-  xhttp.open(method, url, true);
+  xhttp.open(method.toUpperCase(), url, true);
   xhttp.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
   if (params && method === 'POST') {
     xhttp.send(params);
