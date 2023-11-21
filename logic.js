@@ -419,10 +419,10 @@ function commitEdit(lineNum, lineContent) {
     'patch',
     payload,
     () => {
-      doPostEditWork(lineNum, lineContent);
+      doPostEditWork(true, lineNum, lineContent);
     },
     () => {
-      console.log('failure');
+      doPostEditWork(false, lineNum, lineContent);
     }
   );
 }
@@ -432,16 +432,21 @@ function cancelEdit(inputContainer, span) {
   span.classList.remove('hide');
 }
 
-function doPostEditWork(lineNum, lineContent) {
+function doPostEditWork(success, lineNum, lineContent) {
   const lineNumSpans = Array.from(document.querySelectorAll('.line-number-span'));
   const lineNumSpan = lineNumSpans.find(s => s.innerHTML === lineNum);
   const resultsLineContainer = lineNumSpan.parentElement.parentElement;
   const contentSpan = resultsLineContainer.querySelector('.line-content-span');
-  contentSpan.innerHTML = highlightSearchString(lineContent);
+
+  if (success) {
+    contentSpan.innerHTML = highlightSearchString(lineContent);
+  }
 
   const inputContainer = resultsLineContainer.querySelector('.line-edit-input-container');
   inputContainer.remove();
   contentSpan.classList.remove('hide');
+
+  success ? displaySuccessMessage('Line updated successfully') : displayErrorMessage('Could not update line');
 }
 
 function removeSpanForEdit(content) {
