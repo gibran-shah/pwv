@@ -8,10 +8,6 @@ function pageLoad() {
     //importFile();
   } else {
     renderSignedOutContainer();
-    const username = document.getElementById('username');
-    const password = document.getElementById('password');
-    username.value = 'gibran.shah.pwv@gmail.com';
-    password.value = 'pwv.4real.123.@';
   }
 }
 
