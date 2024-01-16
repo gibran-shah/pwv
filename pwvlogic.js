@@ -545,7 +545,12 @@ function deleteLineOnFrontEnd() {
 function ajax(endpoint, method, payload, callback, errorCallback) {
   const xhttp = new XMLHttpRequest();
   const params = payload ? new URLSearchParams(payload) : null;
-  const url = 'http://localhost:3000/' + endpoint + (params ? `?${params}` : '');
+  const hostname = window.location.hostname;
+  const url = (
+    hostname === '127.0.0.1'
+      ? 'http://localhost'
+      : 'http://ec2-18-223-71-133.us-east-2.compute.amazonaws.com'
+  ) + ':3000/' + endpoint + (params ? `?${params}` : '');
 
   xhttp.onreadystatechange = function() {
     if (this.readyState === 4) {
