@@ -6,7 +6,6 @@
     </head>
     <body onload="pageLoad()">
 
-        <!-- sign in -->
         <div id="signed-out-container">
             <div id="credentials-outer-container">
                 <div id="credentials-inner-container">
@@ -25,71 +24,5 @@
             </div>
         </div>
 
-        <!-- in -->
-        <div id="signed-in-container">
-
-            <!-- toast message -->
-            <div id="message-container">
-                <div id="success-message" class="message hide" style="background-color: rgb(0, 255,75);">
-                    <!-- message injected here -->
-                </div>
-                <div id="error-message" class="message hide" style="background-color: red;">
-                    <!-- message injected here -->
-                </div>
-            </div>
-
-            <div id="content-container">
-                <div id="search-add-sign-out-container">
-                    <div id="search-container">
-                        Search:
-                        <input type="text">
-                        <div id="search-btn-container" onclick="search()"></div>
-                    </div>
-                    <div id="add-btn-container" onclick="add()"></div>
-                    <div id="sign-out-btn-container">
-                        <a href="javascript:signOut()">SIGN OUT</a>
-                    </div>
-                </div>
-                <div id="search-results-container"></div>
-            </div>
-
-            <div id="add-lines-backdrop" class="modal-backdrop">
-                <div class="modal-box">
-                    <div class="modal-header">
-                        <h2>Add Lines</h2>
-                        <div class="close-modal-btn" onclick="closeModal('add')"></div>
-                    </div>
-                    <div class="modal-body">
-                        <textarea id="new-lines-textarea"></textarea>
-                    </div>
-                    <div class="modal-btns-container">
-                        <button class="secondary-btn" onclick="closeModal('add')">Cancel</button>
-                        <button class="primary-btn" onclick="submitNewLines()">Add</button>
-                    </div>
-                </div>
-            </div>
-
-            <div id="delete-line-backdrop" class="modal-backdrop">
-                <div class="modal-box">
-                    <div class="modal-header">
-                        <h2>Delete Line?</h2>
-                        <div class="close-modal-btn" onclick="closeModal('delete')"></div>
-                    </div>
-                    <div class="modal-body">
-                        Are you sure you want to delete line #[line-num]?
-                    </div>
-                    <div class="modal-btns-container">
-                        <button class="secondary-btn" onclick="closeModal('delete')">No</button>
-                        <button class="primary-btn" onclick="deleteLine()">Yes</button>
-                    </div>
-                </div>
-            </div>
-
-            <div class="line-edit-input-container hide">
-                <input type="text">
-                <span>&#10003;</span>
-                <span>&#10005;</span>
-            </div>
-        </div>
     </body>
 </html>

@@ -1,9 +1,19 @@
 let lineToDelete = null;
 let searchString = '';
+const hostname = window.location.hostname;
+const frontend = (
+  (hostname === '127.0.0.1' || hostname === 'localhost')
+    ? 'http://localhost:5500'
+    : 'http://planetshah/pwv'
+);
+const backend = (
+  (hostname === '127.0.0.1' || hostname === 'localhost')
+    ? 'http://localhost'
+    : 'http://ec2-18-223-71-133.us-east-2.compute.amazonaws.com'
+) + ':3000/';
 
 function pageLoad() {
   if (isSignedIn()) {
-    renderSignedInContainer();
     wireElements();
     //importFile();
   } else {
@@ -116,8 +126,7 @@ function signIn() {
       if (accessToken && expirationTime) {
         localStorage.setItem('accessToken', accessToken);
         localStorage.setItem('expirationTime', expirationTime);
-        renderSignedInContainer();
-        wireElements();
+        window.location.href = `${frontend}/signedIn.html`;
       } else {
         console.log('Could not log in');
       }
@@ -133,7 +142,7 @@ function signOut() {
     (response) => {
       localStorage.removeItem('accessToken');
       localStorage.removeItem('expirationTime');
-      renderSignedOutContainer();
+      window.location.href = `${frontend}/index.html`;
     }
   );
 }
@@ -545,12 +554,7 @@ function deleteLineOnFrontEnd() {
 function ajax(endpoint, method, payload, callback, errorCallback) {
   const xhttp = new XMLHttpRequest();
   const params = payload ? new URLSearchParams(payload) : null;
-  const hostname = window.location.hostname;
-  const url = (
-    hostname === '127.0.0.1'
-      ? 'http://localhost'
-      : 'http://ec2-18-223-71-133.us-east-2.compute.amazonaws.com'
-  ) + ':3000/' + endpoint + (params ? `?${params}` : '');
+  const url = backend + endpoint + (params ? `?${params}` : '');
 
   xhttp.onreadystatechange = function() {
     if (this.readyState === 4) {
