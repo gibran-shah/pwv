@@ -21,7 +21,8 @@ const corsOptions = {
 		'https://www.planetshah.com',
 		'http://planetshah.com',
 		'https://planetshah.com',
-		'http://127.0.0.1:5500'
+		'http://127.0.0.1:5500',
+		'http://localhost:5500'
 	],
     optionsSuccessStatus: 200
 };
