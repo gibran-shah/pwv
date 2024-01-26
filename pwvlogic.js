@@ -1,3 +1,41 @@
+let lineToDelete = null;
+let searchString = '';
+
+function pageLoad() {
+  if (isSignedIn()) {
+    if (
+      window.location.pathname === '/index.html'
+      || window.location.pathname === '/pwv'
+      || window.location.pathname === '/pwv/index.html'
+    ) {
+      window.location.href = `${getHostName()}/signedin.html`;
+    } else {
+      wireElements();
+    }
+    //importFile();
+  } else {
+    if (
+      window.location.pathname === '/signedin.html'
+      || window.location.pathname === '/pwv/signedin.html'
+    ) {
+      window.location.href = `${getHostName()}/index.html`;
+    }
+  }
+}
+
+function isSignedIn() {
+  const accessToken = localStorage.getItem('accessToken');
+  if (accessToken) {
+    const expirationTime = localStorage.getItem('expirationTime');
+    if (expirationTime) {
+      return parseInt(expirationTime) > Date.now();
+    }
+    return false;
+  }
+
+  return false;
+}
+
 function importFile() {
     ajax('import', 'GET');
 }
@@ -77,6 +115,27 @@ function closeModal(modal) {
   body.style['overflow-y'] = '';
 }
 
+function signIn() {
+  const username = document.getElementById('username');
+  const password = document.getElementById('password');
+  ajax(
+    'auth/signin',
+    'POST',
+    { username: username.value, password: password.value },
+    (response) => {
+      const responseObj = JSON.parse(response);
+      const { accessToken, expirationTime } = responseObj;
+      if (accessToken && expirationTime) {
+        localStorage.setItem('accessToken', accessToken);
+        localStorage.setItem('expirationTime', expirationTime);
+        window.location.href = `${getHostName()}/signedin.html`;
+      } else {
+        console.log('Could not log in');
+      }
+    }
+  );
+}
+
 function signOut() {
   ajax(
     'auth/signout',
@@ -85,7 +144,7 @@ function signOut() {
     (response) => {
       localStorage.removeItem('accessToken');
       localStorage.removeItem('expirationTime');
-      window.location.href = `${frontend}/index.html`;
+      window.location.href = `${getHostName()}/index.html`;
     }
   );
 }
@@ -492,4 +551,46 @@ function deleteLineOnFrontEnd() {
       found = true;
     }
   }
+}
+
+function ajax(endpoint, method, payload, callback, errorCallback) {
+  const xhttp = new XMLHttpRequest();
+  const params = payload ? new URLSearchParams(payload) : null;
+  const url = `${getBackend()}/${endpoint}${(params ? `?${params}` : '')}`;
+
+  xhttp.onreadystatechange = function() {
+    if (this.readyState === 4) {
+      if (this.status === 200) {
+        if (callback instanceof Function) {
+          callback(this.response);
+        }
+      } else {
+        console.log('error: ', JSON.stringify(this));
+        if (errorCallback) {
+          errorCallback(this.response);
+        }
+      }
+    }  
+  };
+  xhttp.open(method.toUpperCase(), url, true);
+  xhttp.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+  if (params && method === 'POST') {
+    xhttp.send(params);
+  } else {
+    xhttp.send();
+  }
+}
+
+function getHostName() {
+  const hostname = window.location.hostname;
+  return (hostname === '127.0.0.1' || hostname === 'localhost')
+    ? `http://localhost:${window.location.port}`
+    : 'http://planetshah.com/pwv';
+}
+
+function getBackend() {
+  const hostname = window.location.hostname;
+  return (hostname === '127.0.0.1' || hostname === 'localhost')
+    ? `http://localhost:3000`
+    : 'http://ec2-18-223-71-133.us-east-2.compute.amazonaws.com:3000';
 }
