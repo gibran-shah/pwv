@@ -12,3 +12,7 @@ https://stackoverflow.com/questions/75872817/how-can-i-search-my-encrypted-datab
 -Disable fetch more buttons when at the end
 -Need spinner
 -Need toast messages
+-allow click through in toast messages
+-allow user to insert new lines not at end
+-login failed message
+-get better favicon, specify path to it in html files, and remove check for favicon.ico in router on server
