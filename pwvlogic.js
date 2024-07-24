@@ -5,8 +5,7 @@ function pageLoad() {
   if (isSignedIn()) {
     if (
       window.location.pathname === '/index.html'
-      || window.location.pathname === '/pwv'
-      || window.location.pathname === '/pwv/index.html'
+      || window.location.pathname === ''
     ) {
       window.location.href = `${getHostName()}/signedin.html`;
     } else {
@@ -16,7 +15,6 @@ function pageLoad() {
   } else {
     if (
       window.location.pathname === '/signedin.html'
-      || window.location.pathname === '/pwv/signedin.html'
     ) {
       window.location.href = `${getHostName()}/index.html`;
     }
@@ -585,7 +583,7 @@ function getHostName() {
   const hostname = window.location.hostname;
   return (hostname === '127.0.0.1' || hostname === 'localhost')
     ? `http://localhost:${window.location.port}`
-    : 'http://planetshah.com/pwv';
+    : 'http://pwv.planetshah.com';
 }
 
 function getBackend() {
