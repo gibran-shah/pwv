@@ -552,6 +552,8 @@ function deleteLineOnFrontEnd() {
 }
 
 function ajax(endpoint, method, payload, callback, errorCallback) {
+  showLoadingSpinner();
+
   const xhttp = new XMLHttpRequest();
   const params = payload ? new URLSearchParams(payload) : null;
   const url = `${getBackend()}/${endpoint}${(params ? `?${params}` : '')}`;
@@ -561,11 +563,13 @@ function ajax(endpoint, method, payload, callback, errorCallback) {
       if (this.status === 200) {
         if (callback instanceof Function) {
           callback(this.response);
+          hideLoadingSpinner();
         }
       } else {
         console.log('error: ', JSON.stringify(this));
         if (errorCallback) {
           errorCallback(this.response);
+          hideLoadingSpinner();
         }
       }
     }  
@@ -577,6 +581,16 @@ function ajax(endpoint, method, payload, callback, errorCallback) {
   } else {
     xhttp.send();
   }
+}
+
+function showLoadingSpinner() {
+  const spinnerContainer = document.querySelector('.loading-spinner');
+  spinnerContainer.style.display = 'flex';
+}
+
+function hideLoadingSpinner() {
+  const spinnerContainer = document.querySelector('.loading-spinner');
+  spinnerContainer.style.display = 'none';
 }
 
 function getHostName() {

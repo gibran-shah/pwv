@@ -361,3 +361,20 @@ body {
     margin-left: 5px;
     cursor: pointer;
 }
+
+.loading-spinner {
+    width: 100%;
+    height: 100vh;
+    position: fixed;
+    background-color: rgb(0,0,0,.5);
+    z-index: 100;
+    display: none;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+.loading-spinner img {
+    width: 100px;
+    height: 100px;
+}
