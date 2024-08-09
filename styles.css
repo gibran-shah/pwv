@@ -309,15 +309,24 @@ body {
     display: none !important;
 }
 
-.delete-line-container {
-    width: 20px;
-    height: 20px;
+.action-btns-container {
+    width: 100%;
     position: absolute;
-    right: 0;
     top: 0;
+    right: 0;
+
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    align-items: center;
 }
 
-.delete-line-btn {
+.action-btn-container {
+    width: 20px;
+    height: 20px;
+}
+
+.action-btn {
     cursor: pointer;
     opacity: .5;
 }

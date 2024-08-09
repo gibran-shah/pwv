@@ -365,18 +365,28 @@ function createLineDiv(line, groupNum, lineNum, searchString) {
   contentDiv.innerHTML = `<span class='line-content-span'>${line.content}</span>`;
   lineDiv.append(contentDiv);
 
+  const actionButtonsContainer = document.createElement('div');
+  actionButtonsContainer.classList.add('action-btns-container');
+  actionButtonsContainer.classList.add('hide');
+  lineDiv.append(actionButtonsContainer);
+
+  const copyDiv = document.createElement('div');
+  copyDiv.classList.add('action-btn-container');
+  copyDiv.innerHTML = `<img src="assets/images/copy-btn.png" class="action-btn" title="copy this line" onclick="copyLineClicked(${line.line})">`;
+  actionButtonsContainer.append(copyDiv);
+
   const deleteDiv = document.createElement('div');
-  deleteDiv.classList.add('delete-line-container');
-  deleteDiv.classList.add('hide');
-  deleteDiv.innerHTML = `<img src="assets/images/trash-btn.png" class="delete-line-btn" onclick="deleteLineClicked(${line.line})">`;
-  lineDiv.append(deleteDiv);
+  deleteDiv.classList.add('action-btn-container');
+ // deleteDiv.classList.add('hide');
+  deleteDiv.innerHTML = `<img src="assets/images/trash-btn.png" class="action-btn" title="delete this line" onclick="deleteLineClicked(${line.line})">`;
+  actionButtonsContainer.append(deleteDiv);
 
   lineDiv.addEventListener('mouseover', function() {
-    deleteDiv.classList.remove('hide');
+    actionButtonsContainer.classList.remove('hide');
   });
 
   lineDiv.addEventListener('mouseout', function() {
-    deleteDiv.classList.add('hide');
+    actionButtonsContainer.classList.add('hide');
   });
 
   return lineDiv;
@@ -507,6 +517,10 @@ function displayErrorMessage(message) {
       errorMessage.classList.add('hide');
     }, 1000);
   }, 5000);
+}
+
+function copyLineClicked(lineNum) {
+  alert(`Line ${lineNum} copied.`);
 }
 
 function deleteLineClicked(lineNum) {

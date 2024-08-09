@@ -10,9 +10,12 @@ https://stackoverflow.com/questions/75467492/how-to-i-send-parameters-in-an-ajax
 https://stackoverflow.com/questions/75872817/how-can-i-search-my-encrypted-database-records
 
 -Disable fetch more buttons when at the end
--Need spinner
 -Need toast messages
 -allow click through in toast messages
--allow user to insert new lines not at end
+-have right-click copy feature
+-allow user to insert new lines not at end (maybe in context menu)
 -login failed message
 -get better favicon, specify path to it in html files, and remove check for favicon.ico in router on server
+-hide text that goes off right edge (maybe have a tool tip)
+-ensure token expires
+-add regions to javascript file
