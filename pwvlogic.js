@@ -370,16 +370,7 @@ function createLineDiv(line, groupNum, lineNum, searchString) {
   actionButtonsContainer.classList.add('hide');
   lineDiv.append(actionButtonsContainer);
 
-  const copyDiv = document.createElement('div');
-  copyDiv.classList.add('action-btn-container');
-  copyDiv.innerHTML = `<img src="assets/images/copy-btn.png" class="action-btn" title="copy this line" onclick="copyLineClicked(${line.line})">`;
-  actionButtonsContainer.append(copyDiv);
-
-  const deleteDiv = document.createElement('div');
-  deleteDiv.classList.add('action-btn-container');
- // deleteDiv.classList.add('hide');
-  deleteDiv.innerHTML = `<img src="assets/images/trash-btn.png" class="action-btn" title="delete this line" onclick="deleteLineClicked(${line.line})">`;
-  actionButtonsContainer.append(deleteDiv);
+  fillActionButtonsContainer(actionButtonsContainer, line.line);
 
   lineDiv.addEventListener('mouseover', function() {
     actionButtonsContainer.classList.remove('hide');
@@ -390,6 +381,23 @@ function createLineDiv(line, groupNum, lineNum, searchString) {
   });
 
   return lineDiv;
+}
+
+function fillActionButtonsContainer(actionButtonsContainer, line) {
+  var buttonDetails = [
+ //   { buttonIcon: 'trash-btn.png', title: 'delete this line', onClick: 'deleteLineClicked' },
+   // { buttonIcon: 'trash-btn.png', title: 'delete this line', onClick: 'deleteLineClicked' },
+    { buttonIcon: 'copy-btn.png', title: 'copy this line', onClick: 'copyLineClicked' },
+    { buttonIcon: 'trash-btn.png', title: 'delete this line!', onClick: 'deleteLineClicked' }
+  ];
+
+  for (var i = 0; i < buttonDetails.length; i++) {
+    const details = buttonDetails[i];
+    const buttonDiv = document.createElement('div');
+    buttonDiv.classList.add('action-btn-container');
+    buttonDiv.innerHTML = `<img src="assets/images/${details.buttonIcon}" class="action-btn" title="${details.title}" onclick="${details.onClick}(${line})">`;
+    actionButtonsContainer.append(buttonDiv);
+  }
 }
 
 function highlightSearchString(content) {
