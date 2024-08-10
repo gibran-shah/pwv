@@ -324,6 +324,11 @@ body {
 .action-btn-container {
     width: 20px;
     height: 20px;
+
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
 }
 
 .action-btn {

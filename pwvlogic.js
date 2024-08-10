@@ -385,8 +385,10 @@ function createLineDiv(line, groupNum, lineNum, searchString) {
 
 function fillActionButtonsContainer(actionButtonsContainer, line) {
   var buttonDetails = [
- //   { buttonIcon: 'trash-btn.png', title: 'delete this line', onClick: 'deleteLineClicked' },
-   // { buttonIcon: 'trash-btn.png', title: 'delete this line', onClick: 'deleteLineClicked' },
+    { buttonIcon: 'move-down-btn.png', title: 'move this line down', onClick: 'moveLineDownClicked' },
+    { buttonIcon: 'move-up-btn.png', title: 'move this line up', onClick: 'moveLineUpClicked' },
+    { buttonIcon: 'add-blank-line-below-btn.png', title: 'add a blank line below this one', onClick: 'addBlankLineBelowClicked' },
+    { buttonIcon: 'add-blank-line-above-btn.png', title: 'add a blank line above this one', onClick: 'addBlankLineAboveClicked' },
     { buttonIcon: 'copy-btn.png', title: 'copy this line', onClick: 'copyLineClicked' },
     { buttonIcon: 'trash-btn.png', title: 'delete this line!', onClick: 'deleteLineClicked' }
   ];
@@ -525,6 +527,22 @@ function displayErrorMessage(message) {
       errorMessage.classList.add('hide');
     }, 1000);
   }, 5000);
+}
+
+function moveLineDownClicked(lineNum) {
+  alert(`Line ${lineNum} moved down.`);
+}
+
+function moveLineUpClicked(lineNum) {
+  alert(`Line ${lineNum} moved up.`);
+}
+
+function addBlankLineBelowClicked(lineNum) {
+  alert(`Blank line added below line ${lineNum}.`);
+}
+
+function addBlankLineAboveClicked(lineNum) {
+  alert(`Blank line added above line ${lineNum}.`);
 }
 
 function copyLineClicked(lineNum) {
