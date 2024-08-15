@@ -546,7 +546,20 @@ function addBlankLineAboveClicked(lineNum) {
 }
 
 function copyLineClicked(lineNum) {
-  alert(`Line ${lineNum} copied.`);
+  const lineContainers = document.querySelectorAll('.results-line-container');
+  for (var i = 0; i < lineContainers.length; i++) {
+    const lineContainer = lineContainers[i];
+    const lineNumberSpan = lineContainer.querySelector('.line-number-span');
+    if (lineNum === parseInt(lineNumberSpan.innerHTML, 10)) {
+      const lineContentSpan = lineContainer.querySelector('.line-content-span');
+      let lineContent = lineContentSpan.innerHTML;
+      lineContent = lineContent.replaceAll('<span class="search-string-instance">', '');
+      lineContent = lineContent.replaceAll('</span>', '');
+      navigator.clipboard.writeText(lineContent);
+      displaySuccessMessage('Line copied to clipboard.');
+      return;
+    }
+  }
 }
 
 function deleteLineClicked(lineNum) {
