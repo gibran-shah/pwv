@@ -19,3 +19,4 @@ https://stackoverflow.com/questions/75872817/how-can-i-search-my-encrypted-datab
 -hide text that goes off right edge (maybe have a tool tip)
 -ensure token expires
 -add regions to javascript file
+-add caching on backend
