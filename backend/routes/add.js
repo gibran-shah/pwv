@@ -7,26 +7,61 @@ const router = exp.Router();
 router.post('/', (req, res, next) => {
     const auth = utils.getAuth();
     if (auth.currentUser) {
+        const lineNum = req.body.lineNum;
         const content = req.body.content;
         const decodedContent = decodeContent(content);
         const encryptedContent = encrypt(decodedContent);
-        getTotalLinesFromDatabase().then((totalLines) => {
-            addContentToDatabase(encryptedContent.map(
-                    (ec, i) => ({ line: totalLines + i + 1, content: ec })
-                )).then(
-                    newLines => updateIndexes(newLines)
-                ).then(
-                    () => res.status(200).send('Add successful')
-                ).catch(
-                    err => res.status(500).send('Something went wrong when attempting to add content.')
-                );
-        }, (err) => {
-            res.status(500).send('Something went wrong when attempting to add content.');
-        });
+
+        const addContentFunction = (encryptedContent, lineNum) => {
+            return addContentToDatabase(encryptedContent.map(
+                (ec, i) => ({ line: lineNum + i + 1, content: ec })
+            )).then(
+                newLines => updateIndexes(newLines)
+            ).catch(
+                err => res.status(500).send('Something went wrong when attempting to add content.')
+            );
+        }
+
+        if (lineNum) {
+            const lineNumParsed = parseInt(lineNum, 10);
+            incrementLineNumbersAfter(lineNumParsed).then(
+                () => addContentFunction(encryptedContent, lineNumParsed)
+            ).then(
+                () => res.status(200).send('Add successful')
+            ).catch(
+                (err) => res.status(500).send('Something went wrong when attempting to add content.')
+            )
+        } else {
+            getTotalLinesFromDatabase().then(
+                (totalLines) => addContentFunction(encryptedContent, totalLines)
+            ).then(
+                () => res.status(200).send('Add successful')
+            ).catch(
+                (err) => res.status(500).send('Something went wrong when attempting to add content.')
+            );
+        }
     } else {
         res.status(403).send('Unauthorized');
     }
 });
+
+const incrementLineNumbersAfter = (lineNum) => {
+    if (!fbAdmin.apps.length) {
+        utils.initFirebase();
+    }
+
+    const firestore = fbAdmin.apps[0].firestore();
+    return firestore.collection('lines').where('line', '>', lineNum).get()
+        .then(snapshot => {
+            const batch = firestore.batch();
+            snapshot.docs.forEach(doc => {
+                const line = doc.data();
+                line.line++;
+                batch.set(doc.ref, line);
+            });
+            return batch.commit();
+        });
+}
 
 const updateIndexes = (newLines) => {
     if (!fbAdmin.apps.length) {

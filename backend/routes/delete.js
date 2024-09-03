@@ -37,7 +37,7 @@ function deleteLine(lineNum) {
             doc.ref.delete();
         });
         if (!line) {
-            res.status(500).send('Failed to delete line.');
+            return false;
         } else {
             return line;
         }

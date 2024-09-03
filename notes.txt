@@ -20,3 +20,5 @@ https://stackoverflow.com/questions/75872817/how-can-i-search-my-encrypted-datab
 -ensure token expires
 -add regions to javascript file
 -add caching on backend
+-What happens if you delete all lines in a block?
+-Test deleting or adding a blank line and see what happens to indexes below that line. They should be off by 1.
