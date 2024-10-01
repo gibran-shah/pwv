@@ -538,20 +538,22 @@ function moveLineUpClicked(lineNum) {
 }
 
 function addBlankLineBelowClicked(lineNum) {
-  addBlankLineClicked(lineNum);
+
 }
 
 function addBlankLineAboveClicked(lineNum) {
-  addBlankLineClicked(lineNum - 1);
+
 }
 
-function addBlankLineClicked(lineNum) {
+function addBlankLine(lineNum) {
   const payload = {
     lineNum,
     content: ''
   };
   ajax('add', 'POST', payload, function() {
-    displaySuccessMessage('Blank line added successfully');
+    // displaySuccessMessage('Blank line added successfully');
+    // incrementLineNumbersAfter(lineNum);
+    // addBlankLineAt(lineNum);
   }, function() {
     displayErrorMessage('Error adding blank line');
   });
