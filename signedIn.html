@@ -17,10 +17,16 @@
             <!-- toast message -->
             <div id="message-container">
                 <div id="success-message" class="message hide" style="background-color: rgb(0, 255,75);">
-                    <!-- message injected here -->
+                    <span><!-- message injected here --></span>
+                    <div class="toast-message-close-btn" onclick="closeToastMessageClicked('success')">
+                        <img src="assets/images/toast-msg-close-btn.png" alt="close" />
+                    </div>
                 </div>
                 <div id="error-message" class="message hide" style="background-color: red;">
-                    <!-- message injected here -->
+                    <span><!-- message injected here --></span>
+                    <div class="toast-message-close-btn" onclick="closeToastMessageClicked('error')">
+                        <img src="assets/images/toast-msg-close-btn.png" alt="close" />
+                    </div>
                 </div>
             </div>
 

@@ -1,5 +1,7 @@
 let lineToDelete = null;
 let searchString = '';
+let toastMessageTimeout = null;
+let toastMessageMoveTimeout = null;
 
 function pageLoad() {
   if (isSignedIn()) {
@@ -499,34 +501,59 @@ function encodeCommas(array) {
 
 function displaySuccessMessage(message) {
   const messageContainer = document.querySelector('#message-container');
-  const successMessage = document.querySelector('#success-message');
+  const successMessageBox = document.querySelector('#success-message');
+  const successMessageSpan = document.querySelector('#success-message span');
 
-  successMessage.innerHTML = message;
-  successMessage.classList.remove('hide');
+  successMessageSpan.innerHTML = message;
+  successMessageBox.classList.remove('hide');
   messageContainer.classList.add('on-screen');
 
-  setTimeout(function() {
-    messageContainer.classList.remove('on-screen');
-    setTimeout(function() {
-      successMessage.classList.add('hide');
-    }, 1000);
-  }, 5000);
+  startToastMessageTimeout(messageContainer, successMessageBox, 'success');
 }
 
 function displayErrorMessage(message) {
   const messageContainer = document.querySelector('#message-container');
-  const errorMessage = document.querySelector('#error-message');
+  const errorMessageBox = document.querySelector('#error-message');
+  const errorMessageSpan = document.querySelector('#error-message span');
 
-  errorMessage.innerHTML = message;
-  errorMessage.classList.remove('hide');
+  errorMessageSpan.innerHTML = message;
+  errorMessageBox.classList.remove('hide');
   messageContainer.classList.add('on-screen');
 
-  setTimeout(function() {
-    messageContainer.classList.remove('on-screen');
-    setTimeout(function() {
-      errorMessage.classList.add('hide');
-    }, 1000);
+  startToastMessageTimeout(messageContainer, errorMessageBox, 'error');
+}
+
+function closeToastMessageClicked(messageType) {
+  clearTimeout(toastMessageTimeout);
+  clearTimeout(toastMessageMoveTimeout);
+
+  const messageContainer = document.querySelector('#message-container');
+  const messageBox = document.querySelector(`#${messageType}-message`);
+
+  removeOnScreenFromToastMessage(messageContainer, messageType);
+
+  startToastMessageMoveTimeout(messageBox, messageType);
+}
+
+function removeOnScreenFromToastMessage(messageContainer, messageType) {
+  const closeBtn = document.querySelector(`#${messageType}-message img`);
+  closeBtn.classList.add('hide');
+  messageContainer.classList.remove('on-screen');
+}
+
+function startToastMessageTimeout(messageContainer, messageBox, messageType) {
+  toastMessageTimeout = setTimeout(function() {
+    removeOnScreenFromToastMessage(messageContainer, messageType);
+    startToastMessageMoveTimeout(messageBox, messageType);
   }, 5000);
+}
+
+function startToastMessageMoveTimeout(messageBox, messageType) {
+  toastMessageMoveTimeout = setTimeout(function() {
+    messageBox.classList.add('hide');
+    const closeBtn = document.querySelector(`#${messageType}-message img`);
+    closeBtn.classList.remove('hide');
+  }, 1000);
 }
 
 function moveLineDownClicked(lineNum) {
