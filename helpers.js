@@ -1,0 +1,58 @@
+function createLineDiv(line) {
+    const lineDiv = document.createElement('div');
+    lineDiv.classList.add('results-line-container');
+  
+    const numberDiv = document.createElement('div');
+    numberDiv.innerHTML = `<span class='line-number-span'>${line.line}</span>`;
+    lineDiv.append(numberDiv);
+  
+    line.content = highlightSearchString(line.content);
+  
+    const contentDiv = document.createElement('div');
+    contentDiv.classList.add('line-content-container');
+    contentDiv.ondblclick = function(e) { lineContentDblClicked(e.target); };
+    contentDiv.innerHTML = `<span class='line-content-span'>${line.content}</span>`;
+    lineDiv.append(contentDiv);
+  
+    const actionButtonsContainer = document.createElement('div');
+    actionButtonsContainer.classList.add('action-btns-container');
+    actionButtonsContainer.classList.add('hide');
+    lineDiv.append(actionButtonsContainer);
+  
+    fillActionButtonsContainer(actionButtonsContainer, line.line);
+  
+    lineDiv.addEventListener('mouseover', function() {
+        actionButtonsContainer.classList.remove('hide');
+    });
+  
+    lineDiv.addEventListener('mouseout', function() {
+        actionButtonsContainer.classList.add('hide');
+    });
+  
+    return lineDiv;
+}
+
+function fillActionButtonsContainer(actionButtonsContainer, line) {
+    var buttonDetails = [
+        { buttonIcon: 'move-down-btn.png', title: 'move this line down', onClick: 'moveLineDownClicked' },
+        { buttonIcon: 'move-up-btn.png', title: 'move this line up', onClick: 'moveLineUpClicked' },
+        { buttonIcon: 'add-blank-line-below-btn.png', title: 'add a blank line below this one', onClick: 'addBlankLineBelowClicked' },
+        { buttonIcon: 'add-blank-line-above-btn.png', title: 'add a blank line above this one', onClick: 'addBlankLineAboveClicked' },
+        { buttonIcon: 'copy-btn.png', title: 'copy this line', onClick: 'copyLineClicked' },
+        { buttonIcon: 'trash-btn.png', title: 'delete this line!', onClick: 'deleteLineClicked' }
+    ];
+  
+    for (var i = 0; i < buttonDetails.length; i++) {
+        const details = buttonDetails[i];
+        const buttonDiv = document.createElement('div');
+        buttonDiv.classList.add('action-btn-container');
+        buttonDiv.innerHTML = `<img src="assets/images/${details.buttonIcon}" class="action-btn" title="${details.title}" onclick="${details.onClick}(${line})">`;
+        actionButtonsContainer.append(buttonDiv);
+    }
+}
+  
+function highlightSearchString(content) {
+    const regex = new RegExp(searchString, 'gi');
+    return content.replace(regex, `<span class='search-string-instance'>$&</span>`);
+}
+
