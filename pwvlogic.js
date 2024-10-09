@@ -507,11 +507,11 @@ function moveLineUpClicked(lineNum) {
 }
 
 function addBlankLineBelowClicked(lineNum) {
-
+  addBlankLine(lineNum + 1);
 }
 
 function addBlankLineAboveClicked(lineNum) {
-
+  addBlankLine(lineNum);
 }
 
 function addBlankLine(lineNum) {

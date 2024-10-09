@@ -14,7 +14,7 @@ router.post('/', (req, res, next) => {
 
         const addContentFunction = (encryptedContent, lineNum) => {
             return addContentToDatabase(encryptedContent.map(
-                (ec, i) => ({ line: lineNum + i + 1, content: ec })
+                (ec, i) => ({ line: lineNum + i, content: ec })
             )).then(
                 newLines => updateIndexes(newLines)
             ).catch(
@@ -24,7 +24,7 @@ router.post('/', (req, res, next) => {
 
         if (lineNum) {
             const lineNumParsed = parseInt(lineNum, 10);
-            incrementLineNumbersAfter(lineNumParsed).then(
+            incrementLineNumbersAt(lineNumParsed).then(
                 () => addContentFunction(encryptedContent, lineNumParsed)
             ).then(
                 () => res.status(200).send('Add successful')
@@ -33,7 +33,7 @@ router.post('/', (req, res, next) => {
             )
         } else {
             getTotalLinesFromDatabase().then(
-                (totalLines) => addContentFunction(encryptedContent, totalLines)
+                (totalLines) => addContentFunction(encryptedContent, totalLines + 1)
             ).then(
                 () => res.status(200).send('Add successful')
             ).catch(
@@ -45,13 +45,13 @@ router.post('/', (req, res, next) => {
     }
 });
 
-const incrementLineNumbersAfter = (lineNum) => {
+const incrementLineNumbersAt = (lineNum) => {
     if (!fbAdmin.apps.length) {
         utils.initFirebase();
     }
 
     const firestore = fbAdmin.apps[0].firestore();
-    return firestore.collection('lines').where('line', '>', lineNum).get()
+    return firestore.collection('lines').where('line', '>=', lineNum).get()
         .then(snapshot => {
             const batch = firestore.batch();
             snapshot.docs.forEach(doc => {
