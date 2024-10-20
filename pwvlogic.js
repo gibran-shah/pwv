@@ -332,16 +332,6 @@ function mergeGroups(groupNum, neighboringGroupNum) {
   }
 }
 
-function setLineIdsAndLineCount(groupNum) {
-  const lineElements = document.querySelectorAll(`#results-group-container-${groupNum} .results-line-container`);
-  for (let i = 0; i < lineElements.length; i++) {
-    const line = lineElements[i];
-    line.id = `result-line-container-${groupNum}-${i}`;
-  }
-  const groupDiv = document.querySelector(`#results-group-container-${groupNum}`);
-  groupDiv.setAttribute('line-count', lineElements.length);
-}
-
 function getLineNumberByIndex(groupNum, lineIndex) {
   if (lineIndex === 'last') {
     const groupContainer = document.querySelector(`#results-group-container-${groupNum}`);
@@ -511,7 +501,11 @@ function addBlankLineBelowClicked(lineNum) {
 }
 
 function addBlankLineAboveClicked(lineNum) {
-  addBlankLine(lineNum);
+  if (lineNum === 1) {
+    alert('Cannot add blank line above line 1');
+  } else {
+    addBlankLine(lineNum);
+  }
 }
 
 function addBlankLine(lineNum) {
@@ -520,12 +514,46 @@ function addBlankLine(lineNum) {
     content: ''
   };
   ajax('add', 'POST', payload, function() {
-    // displaySuccessMessage('Blank line added successfully');
-    // incrementLineNumbersAfter(lineNum);
-    // addBlankLineAt(lineNum);
+    displaySuccessMessage('Blank line added successfully');
+    incrementLineNumbersAt(lineNum);
+    const newLineDiv = addBlankLineAt(lineNum);
+    const groupNum = getGroupNumber(newLineDiv.parentElement);
+    setLineIdsAndLineCount(groupNum)
   }, function() {
     displayErrorMessage('Error adding blank line');
   });
+}
+
+function addBlankLineAt(lineNum) {
+  const line = {
+    line: lineNum,
+    content: ''
+  };
+  const lineDiv = createLineDiv(line);
+  injectLineDiv(lineDiv);
+  return lineDiv;
+}
+
+function injectLineDiv(lineDiv) {
+  const newLineNum = lineDiv.querySelector('.line-number-span').innerHTML;
+  const newLineNumInt = parseInt(newLineNum, 10);
+  const lineContainers = document.querySelectorAll('.results-line-container');
+
+  for (let i = 0; i < lineContainers.length; i++) {
+    const container = lineContainers[i];
+    const lineNum = container.querySelector('.line-number-span').innerHTML;
+    const lineNumInt = parseInt(lineNum, 10);
+    const insertAbove = lineNumInt === newLineNumInt + 1;
+    const insertBelow = lineNumInt === newLineNumInt - 1;
+    if (insertAbove || insertBelow) {
+      if (insertAbove) {
+        container.parentElement.insertBefore(lineDiv, container);
+      } else {
+        container.after(lineDiv);
+      }
+      return;
+    }
+  }
 }
 
 function copyLineClicked(lineNum) {

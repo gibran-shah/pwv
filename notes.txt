@@ -9,10 +9,7 @@ https://stackoverflow.com/questions/75467492/how-to-i-send-parameters-in-an-ajax
 
 https://stackoverflow.com/questions/75872817/how-can-i-search-my-encrypted-database-records
 
--Disable fetch more buttons when at the end
--Need toast messages
--allow click through in toast messages
--have right-click copy feature
+-Disable fetch more buttons when at the end and begining
 -allow user to insert new lines not at end (maybe in context menu)
 -login failed message
 -get better favicon, specify path to it in html files, and remove check for favicon.ico in router on server
@@ -21,4 +18,5 @@ https://stackoverflow.com/questions/75872817/how-can-i-search-my-encrypted-datab
 -add regions to javascript file
 -add caching on backend
 -What happens if you delete all lines in a block?
--Test deleting or adding a blank line and see what happens to indexes below that line. They should be off by 1.
+-Move functions to helpers.js
+-dialog backdrop should be sticky

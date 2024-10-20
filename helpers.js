@@ -56,3 +56,46 @@ function highlightSearchString(content) {
     return content.replace(regex, `<span class='search-string-instance'>$&</span>`);
 }
 
+function setLineIdsAndLineCount(groupNum) {
+    const lineElements = document.querySelectorAll(`#results-group-container-${groupNum} .results-line-container`);
+    for (let i = 0; i < lineElements.length; i++) {
+      const line = lineElements[i];
+      line.id = `result-line-container-${groupNum}-${i}`;
+    }
+    const groupDiv = document.querySelector(`#results-group-container-${groupNum}`);
+    groupDiv.setAttribute('line-count', lineElements.length);
+}
+
+function incrementLineNumbersAt(lineNum) {
+    const lineContainers = document.querySelectorAll('.results-line-container');
+    let startIncrementing = false;
+
+    for (let i = 0; i < lineContainers.length; i++) {
+        const container = lineContainers[i];
+        if (!startIncrementing) {
+            const containerLineNum = getLineNumber(container);
+            startIncrementing = containerLineNum >= lineNum;
+        }
+        if (startIncrementing) {
+            incrementLineNumber(container);
+        }
+    }
+}
+
+function getLineNumber(container) {
+    const lineNumberSpan = container.querySelector('.line-number-span');
+    return parseInt(lineNumberSpan.innerHTML, 10);
+}
+
+function incrementLineNumber(container) {
+    const lineNumberSpan = container.querySelector('.line-number-span');
+    const number = parseInt(lineNumberSpan.innerHTML, 10);
+    lineNumberSpan.innerHTML = number + 1;
+}
+
+function getGroupNumber(groupContainer) {
+    const idParts = groupContainer.id.split('-');
+    const groupNumber = idParts[3];
+    return parseInt(groupNumber, 10);
+}
+
