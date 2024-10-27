@@ -23,6 +23,30 @@ router.patch('/', (req, res, next) => {
     }
 });
 
+router.patch('/swap', (req, res, next) => {
+    const auth = utils.getAuth();
+    if (auth.currentUser) {
+        const { lineNum1, lineNum2 } = req.query;
+        let lineNum1Int = parseInt(lineNum1, 10);
+        let lineNum2Int = parseInt(lineNum2, 10);
+        if (
+            (lineNum1Int === lineNum2Int + 1 || lineNum1Int === lineNum2Int - 1)
+            && (lineNum1Int > 0 && lineNum2Int > 0)
+        ) {
+            if (lineNum1Int > lineNum2Int) {
+                lineNum2Int = lineNum1Int;
+                lineNum1Int--;
+            }
+            swap(lineNum1Int, lineNum2Int);
+            res.status(200).send();
+        } else {
+            res.status(400).send('Invalid numbers');
+        }
+    } else {
+        res.status(403).send('Unauthorized');
+    }
+});
+
 function update(lineNum, lineContent) {
     if (!fbAdmin.apps.length) {
         utils.initFirebase();
@@ -71,6 +95,31 @@ function update(lineNum, lineContent) {
             return null;
         }
     });
+}
+
+function swap(lineNum1, lineNum2) {
+    if (!fbAdmin.apps.length) {
+        utils.initFirebase();
+    }
+
+    const firestore = fbAdmin.apps[0].firestore();
+    const batch = firestore.batch();
+    return firestore.collection('lines')
+        .where('line', '>=', lineNum1)
+        .where('line', '<=', lineNum2)
+        .get().then(snapshot => {
+            const lines = [];
+            snapshot.forEach(doc => lines.push({
+                doc,
+                data: doc.data()
+            }));
+            const tempLineNum = lines[0].data.line;
+            lines[0].data.line = lines[1].data.line;
+            lines[1].data.line = tempLineNum;
+            batch.set(lines[0].doc.ref, lines[0].data);
+            batch.set(lines[1].doc.ref, lines[1].data);
+            return batch.commit();
+        });
 }
 
 module.exports = router;

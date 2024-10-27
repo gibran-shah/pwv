@@ -489,11 +489,27 @@ function startToastMessageMoveTimeout(messageBox, messageType) {
 }
 
 function moveLineDownClicked(lineNum) {
-  alert(`Line ${lineNum} moved down.`);
+  const lineNum1 = parseInt(lineNum, 10);
+  const lineNum2 = lineNum1 + 1;
+  swapLines(lineNum1, lineNum2);
 }
 
 function moveLineUpClicked(lineNum) {
-  alert(`Line ${lineNum} moved up.`);
+  const lineNum1 = parseInt(lineNum, 10);
+  const lineNum2 = lineNum1 - 1;
+  swapLines(lineNum1, lineNum2);
+}
+
+function swapLines(lineNum1, lineNum2) {
+  const payload = {
+    lineNum1,
+    lineNum2
+  }
+  ajax('update/swap', 'PATCH', payload, function() {
+    displaySuccessMessage('Line moved successfully');
+  }, function() {
+    displayErrorMessage('Error moving line');
+  });
 }
 
 function addBlankLineBelowClicked(lineNum) {
