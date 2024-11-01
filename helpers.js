@@ -99,3 +99,26 @@ function getGroupNumber(groupContainer) {
     return parseInt(groupNumber, 10);
 }
 
+function getLineContainer(lineNum) {
+    const lineContainers = document.querySelectorAll('.results-line-container');
+    for (let i = 0; i < lineContainers.length; i++) {
+        const container = lineContainers[i];
+        const lineNumSpan = container.querySelector('.line-number-span');
+        const domLineNum = parseInt(lineNumSpan.innerHTML, 10);
+        if (domLineNum === lineNum) return container;
+    }
+    return null;
+}
+
+function updateActionButtonLineNumbers(lineContainer, lineNum) {
+    const actionButtonContainers = lineContainer.querySelectorAll('.action-btn-container');
+    for (let i = 0; i < actionButtonContainers.length; i++) {
+        const container = actionButtonContainers[i];
+        const img = container.querySelector('img');
+        let onClickAttr = img.getAttribute('onclick');
+        const index = onClickAttr.indexOf('(');
+        onClickAttr = `${onClickAttr.substring(0, index)}(${lineNum})`;
+        img.setAttribute('onclick', onClickAttr);
+    }
+}
+

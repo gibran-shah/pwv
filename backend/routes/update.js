@@ -40,7 +40,7 @@ router.patch('/swap', (req, res, next) => {
             swap(lineNum1Int, lineNum2Int);
             res.status(200).send();
         } else {
-            res.status(400).send('Invalid numbers');
+            res.status(400).send('Invalid line numbers');
         }
     } else {
         res.status(403).send('Unauthorized');

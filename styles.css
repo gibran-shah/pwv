@@ -325,6 +325,9 @@ body {
 
 .action-btns-container {
     width: 100%;
+    pointer-events: none;
+    background-color: rgb(0,0,0,.1);
+    
     position: absolute;
     top: 0;
     right: 0;
@@ -339,6 +342,7 @@ body {
     width: 20px;
     height: 20px;
     margin: 0 3px;
+    pointer-events: auto;
 
     display: flex;
     flex-direction: row;

@@ -507,9 +507,39 @@ function swapLines(lineNum1, lineNum2) {
   }
   ajax('update/swap', 'PATCH', payload, function() {
     displaySuccessMessage('Line moved successfully');
+    swapLinesOnFrontEnd(lineNum1, lineNum2);
   }, function() {
     displayErrorMessage('Error moving line');
   });
+}
+
+function swapLinesOnFrontEnd(lineNum1, lineNum2) {
+  const lineContainer1 = getLineContainer(lineNum1);
+  const lineContainer2 = getLineContainer(lineNum2);
+  const lineSpan1 = lineContainer1.querySelector('.line-number-span');
+  const lineSpan2 = lineContainer2.querySelector('.line-number-span');
+
+  // swap line numbers
+  const tempLineNum = lineSpan1.innerHTML;
+  lineSpan1.innerHTML = lineSpan2.innerHTML;
+  lineSpan2.innerHTML = tempLineNum;
+
+  // update action button click hanlders with new line numbers
+  updateActionButtonLineNumbers(lineContainer1, lineSpan1.innerHTML);
+  updateActionButtonLineNumbers(lineContainer2, lineSpan2.innerHTML);
+
+  // swap ids
+  const tempId = lineContainer1.id;
+  lineContainer1.id = lineContainer2.id;
+  lineContainer2.id = tempId;
+
+  // swap container positions in dom
+  const groupContainer = lineContainer1.parentElement;
+  if (lineNum1 < lineNum2) {
+    groupContainer.insertBefore(lineContainer2, lineContainer1);
+  } else {
+    groupContainer.insertBefore(lineContainer1, lineContainer2);
+  }
 }
 
 function addBlankLineBelowClicked(lineNum) {
@@ -534,7 +564,8 @@ function addBlankLine(lineNum) {
     incrementLineNumbersAt(lineNum);
     const newLineDiv = addBlankLineAt(lineNum);
     const groupNum = getGroupNumber(newLineDiv.parentElement);
-    setLineIdsAndLineCount(groupNum)
+    setLineIdsAndLineCount(groupNum);
+    updateActionButtonLineNumbersAfter(lineNum);
   }, function() {
     displayErrorMessage('Error adding blank line');
   });
@@ -568,6 +599,17 @@ function injectLineDiv(lineDiv) {
         container.after(lineDiv);
       }
       return;
+    }
+  }
+}
+
+function updateActionButtonLineNumbersAfter(lineNum) {
+  const lineContainers = document.querySelectorAll('.results-line-container');
+  for (let i = 0; i < lineContainers.length; i++) {
+    const container = lineContainers[i];
+    const lineNumber = getLineNumber(container);
+    if (lineNumber > lineNum) {
+      updateActionButtonLineNumbers(container, lineNumber);
     }
   }
 }
