@@ -671,6 +671,8 @@ function deleteLineOnFrontEnd() {
       found = true;
     }
   }
+
+  updateActionButtonLineNumbersAfter(lineToDelete - 1);
 }
 
 function ajax(endpoint, method, payload, callback, errorCallback) {

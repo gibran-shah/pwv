@@ -22,5 +22,5 @@ https://stackoverflow.com/questions/75872817/how-can-i-search-my-encrypted-datab
 -dialog backdrop should be sticky
 
 -test updating action buttons on each operation
--test setLineIdsAndLineCount() in deleteLineOnFrontEnd() (will it update line ids in susequent groups?)
+-test setLineIdsAndLineCount() in deleteLineOnFrontEnd() (will it update line ids in subsequent groups?)
 -update action buttons on delete
