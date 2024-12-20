@@ -37,8 +37,9 @@ router.patch('/swap', (req, res, next) => {
                 lineNum2Int = lineNum1Int;
                 lineNum1Int--;
             }
-            swap(lineNum1Int, lineNum2Int);
-            res.status(200).send();
+            swap(lineNum1Int, lineNum2Int).then(swappedLines => {
+                res.status(200).send(swappedLines);
+            });
         } else {
             res.status(400).send('Invalid line numbers');
         }
@@ -104,11 +105,11 @@ function swap(lineNum1, lineNum2) {
 
     const firestore = fbAdmin.apps[0].firestore();
     const batch = firestore.batch();
+    const lines = [];
     return firestore.collection('lines')
         .where('line', '>=', lineNum1)
         .where('line', '<=', lineNum2)
         .get().then(snapshot => {
-            const lines = [];
             snapshot.forEach(doc => lines.push({
                 doc,
                 data: doc.data()
@@ -119,7 +120,10 @@ function swap(lineNum1, lineNum2) {
             batch.set(lines[0].doc.ref, lines[0].data);
             batch.set(lines[1].doc.ref, lines[1].data);
             return batch.commit();
-        });
+        }).then(() => lines.map(l => {
+            l.data.content = utils.decrypt(l.data.content);
+            return l.data;
+        }));
 }
 
 module.exports = router;

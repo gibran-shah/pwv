@@ -122,3 +122,9 @@ function updateActionButtonLineNumbers(lineContainer, lineNum) {
     }
 }
 
+function getGroupNumber(groupContainer) {
+    const groupId = groupContainer.id;
+    groupIdParts = groupId.split('-');
+    return groupIdParts[groupIdParts.length - 1];
+}
+

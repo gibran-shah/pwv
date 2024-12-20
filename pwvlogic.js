@@ -496,6 +496,10 @@ function moveLineDownClicked(lineNum) {
 
 function moveLineUpClicked(lineNum) {
   const lineNum1 = parseInt(lineNum, 10);
+  if (lineNum === 1) {
+    alert('Line is already at the top.');
+    return;
+  }
   const lineNum2 = lineNum1 - 1;
   swapLines(lineNum1, lineNum2);
 }
@@ -505,41 +509,39 @@ function swapLines(lineNum1, lineNum2) {
     lineNum1,
     lineNum2
   }
-  ajax('update/swap', 'PATCH', payload, function() {
+  ajax('update/swap', 'PATCH', payload, function(swappedLines) {
     displaySuccessMessage('Line moved successfully');
-    swapLinesOnFrontEnd(lineNum1, lineNum2);
+    swapLinesOnFrontEnd(JSON.parse(swappedLines));
   }, function() {
     displayErrorMessage('Error moving line');
   });
 }
 
-function swapLinesOnFrontEnd(lineNum1, lineNum2) {
-  const lineContainer1 = getLineContainer(lineNum1);
-  const lineContainer2 = getLineContainer(lineNum2);
-  const lineSpan1 = lineContainer1.querySelector('.line-number-span');
-  const lineSpan2 = lineContainer2.querySelector('.line-number-span');
+function swapLinesOnFrontEnd(swappedLines) {
+  const sortedLines = swappedLines.sort((l1, l2) => l1.line > l2.line ? 1 : -1);
 
-  // swap line numbers
-  const tempLineNum = lineSpan1.innerHTML;
-  lineSpan1.innerHTML = lineSpan2.innerHTML;
-  lineSpan2.innerHTML = tempLineNum;
+  const newLineContainer1 = createLineDiv(sortedLines[0]);
+  const newLineContainer2 = createLineDiv(sortedLines[1]);
 
-  // update action button click hanlders with new line numbers
-  updateActionButtonLineNumbers(lineContainer1, lineSpan1.innerHTML);
-  updateActionButtonLineNumbers(lineContainer2, lineSpan2.innerHTML);
+  const existingLineContainer1 = getLineContainer(sortedLines[0].line);
+  const existingLineContainer2 = getLineContainer(sortedLines[1].line);
 
-  // swap ids
-  const tempId = lineContainer1.id;
-  lineContainer1.id = lineContainer2.id;
-  lineContainer2.id = tempId;
-
-  // swap container positions in dom
-  const groupContainer = lineContainer1.parentElement;
-  if (lineNum1 < lineNum2) {
-    groupContainer.insertBefore(lineContainer2, lineContainer1);
+  let insertAfterMe;
+  if (!existingLineContainer1) {
+    insertAfterMe = existingLineContainer2.previousSibling;
   } else {
-    groupContainer.insertBefore(lineContainer1, lineContainer2);
+    insertAfterMe = existingLineContainer1.previousSibling;
   }
+
+  if (existingLineContainer1) {
+    existingLineContainer1.remove();
+  }
+  if (existingLineContainer2) {
+    existingLineContainer2.remove();
+  }
+
+  insertAfterMe.after(newLineContainer2);
+  insertAfterMe.after(newLineContainer1);
 }
 
 function addBlankLineBelowClicked(lineNum) {
