@@ -20,7 +20,6 @@ https://stackoverflow.com/questions/75872817/how-can-i-search-my-encrypted-datab
 -What happens if you delete all lines in a block?
 -Move functions to helpers.js
 -dialog backdrop should be sticky
+-add lines needs spinner
 
 -test updating action buttons on each operation
--test setLineIdsAndLineCount() in deleteLineOnFrontEnd() (will it update line ids in subsequent groups?)
--update action buttons on delete
