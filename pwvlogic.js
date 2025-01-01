@@ -2,6 +2,7 @@ let lineToDelete = null;
 let searchString = '';
 let toastMessageTimeout = null;
 let toastMessageMoveTimeout = null;
+let totalLines = 0;
 
 function pageLoad() {
   if (isSignedIn()) {
@@ -44,7 +45,8 @@ function search() {
     searchString = document.querySelector('#search-container input').value;
     ajax('fetch', 'GET', { searchString: searchString }, (response) => {
       const parsedResponse = JSON.parse(response);
-      showResults(parsedResponse, searchString);
+      totalLines = parseInt(parsedResponse.totalLines, 10);
+      showResults(parsedResponse.recordGroups, searchString);
     });
 }
 
@@ -84,6 +86,7 @@ function submitNewLines() {
   payload.content = encodeCommas(payload.content);
   ajax('add', 'POST', payload, function() {
     displaySuccessMessage('Lines added successfully');
+    totalLines += payload.content.length;
     closeModal('add');
   }, function() {
     displayErrorMessage('Error adding lines');
@@ -215,6 +218,10 @@ function createFetchMoreButton(groupNum, isUpper) {
   fetchMoreBtn.classList.add('fetch-more-btn');
   fetchMoreBtn.innerHTML = `<img src='assets/images/${isUpper ? 'up-arrow' : 'down-arrow'}.png' />`;
   fetchMoreBtn.onclick = () => {
+    if (!isUpper && getLineNumberByIndex(groupNum, 'last') >= totalLines) {
+      alert('There are no more lines.');
+      return;
+    }
     fetchMore(groupNum, isUpper);
   };
   return fetchMoreBtn;
@@ -490,6 +497,10 @@ function startToastMessageMoveTimeout(messageBox, messageType) {
 
 function moveLineDownClicked(lineNum) {
   const lineNum1 = parseInt(lineNum, 10);
+  if (lineNum >= totalLines) {
+    alert('Line is already at the bottom');
+    return;
+  }
   const lineNum2 = lineNum1 + 1;
   swapLines(lineNum1, lineNum2);
 }
@@ -568,6 +579,7 @@ function addBlankLine(lineNum) {
     const groupNum = getGroupNumber(newLineDiv.parentElement);
     setLineIdsAndLineCount(groupNum);
     updateActionButtonLineNumbersAfter(lineNum);
+    totalLines++;
   }, function() {
     displayErrorMessage('Error adding blank line');
   });
@@ -645,6 +657,7 @@ function deleteLine() {
     { lineToDelete },
     () => {
       displaySuccessMessage('Line deleted Successfully.');
+      totalLines--;
       closeModal('delete');
       deleteLineOnFrontEnd();
     },

@@ -15,22 +15,26 @@ router.get('/', (req, res, next) => {
             return;
         }
 
+        let hasIndexes = false;
+        const result = {};
         getIndexes(searchString).then(indexes => {
-            if (indexes.length) {
-                searchByIndex(indexes, 1, 5).then((recordGroups) => {
-                    res.status(200).send(recordGroups);
-                })
+            hasIndexes = !!indexes.length;
+            if (hasIndexes) {
+                return searchByIndex(indexes, 1, 5);
             } else {
-                searchAllRecords(searchString).then((recordGroups) => {
-                    return createIndexes(recordGroups, searchString);
-                }).then((recordGroups) => {
-                    res.status(200).send(recordGroups);
-                });
+                return searchAllRecords(searchString)
             }
+        }).then(recordGroups => {
+            !hasIndexes && createIndexes(recordGroups, searchString);
+            result.recordGroups = recordGroups;
+            return getTotalLines();
+        }).then(totalLines => {
+            result.totalLines = totalLines._data.count;
+            res.status(200).send(result);
         }).catch ((err) => {
             console.log(`err = ${JSON.stringify(err)}`);
             res.status(500).send('Something went wrong when attempting to fetch records');
-        });
+        });        
     } else {
         res.status(403).send('Unauthorized');
     }
@@ -253,6 +257,15 @@ const findMatchingRecords = (records, searchString, frontRange = 0, backRange = 
         }
     }
     return matchingRecordGroups;
+};
+
+const getTotalLines = async () => {
+    if (!fbAdmin.apps.length) {
+        utils.initFirebase();
+    }
+
+    const firestore = fbAdmin.apps[0].firestore();
+    return await firestore.collection('lines').count().get();
 };
 
 module.exports = router;
