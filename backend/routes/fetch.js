@@ -153,20 +153,25 @@ const searchByIndex = async (indexes, frontRange = 0, backRange = 0) => {
     const lineCollection = firestore.collection('lines');
     const key = utils.getRsaKey();
 
-    let currentGroup = []; // for each iteration
-    const recordGroups = []; // accumulator
+    let lineData = [];
     for (let i = 0; i < indexes.length; i++) {
         const doc = await lineCollection.doc(indexes[i]).get();
-        const lineData = doc.data();
+        lineData.push(doc.data());
+    }
 
+    lineData = lineData.sort((ld1, ld2) => ld1.line > ld2.line ? 1 : -1);
+
+    let currentGroup = []; // for each iteration
+    const recordGroups = []; // accumulator
+    for (let i = 0; i < lineData.length; i++) {
         // figure out range of lines to get:
-        let startLine = lineData.line - frontRange;
-        let endLine = lineData.line + backRange;
+        let startLine = lineData[i].line - frontRange;
+        let endLine = lineData[i].line + backRange;
 
         // figure out of we should continue with current group or start a new group:
         if (currentGroup.length) {
             const nextLine = currentGroup[currentGroup.length - 1].line + 1;
-            if (lineData.line <= nextLine) {
+            if (lineData[i].line <= nextLine) {
                 startLine = nextLine;
             } else {
                 recordGroups.push(currentGroup);

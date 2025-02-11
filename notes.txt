@@ -23,3 +23,8 @@ https://stackoverflow.com/questions/75872817/how-can-i-search-my-encrypted-datab
 -add lines needs spinner
 
 -test updating action buttons on each operation
+-updating line not updating indexes
+-make toast message position fixed
+-make sure line count in groups is updated after swapping lines
+-continue testing merging groups after swapping lines
+
