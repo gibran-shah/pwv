@@ -153,12 +153,10 @@ const searchByIndex = async (indexes, frontRange = 0, backRange = 0) => {
     const lineCollection = firestore.collection('lines');
     const key = utils.getRsaKey();
 
+    // Prepare data
     let lineData = [];
-    for (let i = 0; i < indexes.length; i++) {
-        const doc = await lineCollection.doc(indexes[i]).get();
-        lineData.push(doc.data());
-    }
-
+    const docs = await lineCollection.where('__name__', 'in', indexes).get();
+    docs.forEach(doc => lineData.push(doc.data()));
     lineData = lineData.sort((ld1, ld2) => ld1.line > ld2.line ? 1 : -1);
 
     let currentGroup = []; // for each iteration
