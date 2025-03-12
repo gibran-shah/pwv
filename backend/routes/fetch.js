@@ -166,7 +166,7 @@ const searchByIndex = async (indexes, frontRange = 0, backRange = 0) => {
         let startLine = lineData[i].line - frontRange;
         let endLine = lineData[i].line + backRange;
 
-        // figure out of we should continue with current group or start a new group:
+        // figure out if we should continue with current group or start a new group:
         if (currentGroup.length) {
             const nextLine = currentGroup[currentGroup.length - 1].line + 1;
             if (lineData[i].line <= nextLine) {
@@ -187,7 +187,8 @@ const searchByIndex = async (indexes, frontRange = 0, backRange = 0) => {
     }
 
     recordGroups.push(currentGroup);
-    return recordGroups;
+    const mergedGroups = mergeRecords(recordGroups);
+    return mergedGroups;
 };
 
 const searchAllRecords = async (searchString) => {
@@ -195,7 +196,8 @@ const searchAllRecords = async (searchString) => {
         const allRecordsSorted = sortRecords(allRecords);
         const decryptedRecords = decryptRecords(allRecordsSorted);
         const matchingRecordGroups = findMatchingRecords(decryptedRecords, searchString, 1, 5);
-        return matchingRecordGroups;
+        const mergedRecordGroups = mergeRecords(matchingRecordGroups);
+        return mergedRecordGroups;
     });  
 }
 
@@ -261,6 +263,27 @@ const findMatchingRecords = (records, searchString, frontRange = 0, backRange = 
     }
     return matchingRecordGroups;
 };
+
+const mergeRecords = (recordGroups) => {
+    for (let i = 0; i < recordGroups.length - 1; i++) {
+        let group1 = recordGroups[i];
+        const group2 = recordGroups[i+1];
+        const lastRecordInGroup1 = group1[group1.length - 1];
+        const firstRecordInGroup2 = group2[0];
+
+        if (lastRecordInGroup1.line >= firstRecordInGroup2.line - 1) {
+            let currentRecordInGroup2 = firstRecordInGroup2;
+            while (currentRecordInGroup2.line <= lastRecordInGroup1.line) {
+                group2.splice(0, 1);
+                currentRecordInGroup2 = group2[0];
+            }
+            recordGroups[i] = group1.concat(group2);
+            recordGroups.splice(i+1, 1);
+            i--;
+        }
+    }
+    return recordGroups;
+}
 
 const getTotalLines = async () => {
     if (!fbAdmin.apps.length) {

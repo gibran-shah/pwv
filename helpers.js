@@ -94,9 +94,9 @@ function incrementLineNumber(container) {
 }
 
 function getGroupNumber(groupContainer) {
-    const idParts = groupContainer.id.split('-');
-    const groupNumber = idParts[3];
-    return parseInt(groupNumber, 10);
+    const groupId = groupContainer.id;
+    groupIdParts = groupId.split('-');
+    return parseInt(groupIdParts[groupIdParts.length - 1], 10);
 }
 
 function getLineContainer(lineNum) {

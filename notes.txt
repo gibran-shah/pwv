@@ -28,3 +28,4 @@ https://stackoverflow.com/questions/75872817/how-can-i-search-my-encrypted-datab
 -make sure line count in groups is updated after swapping lines
 -continue testing merging groups after swapping lines
 
+https://stackoverflow.com/questions/79447119/how-can-i-fetch-a-set-of-documents-whose-ids-match-an-array-of-ids-in-node-js-us
