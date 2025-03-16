@@ -280,7 +280,7 @@ function shouldMergeGroups(groupNum, neighboringGroupNum) {
         `#results-group-container-${neighboringGroupNum} .results-line-container:first-of-type .line-number-span`
       ).innerHTML
     );
-    return lastLineNumInGroup >= firstLineNumInNeighboringGroup;
+    return lastLineNumInGroup >= firstLineNumInNeighboringGroup - 1;
   } else {
     const firstLineNumInGroup = parseInt(
       document.querySelector(
@@ -292,7 +292,7 @@ function shouldMergeGroups(groupNum, neighboringGroupNum) {
         `#results-group-container-${neighboringGroupNum} .results-line-container:last-of-type .line-number-span`
       ).innerHTML
     );
-    return firstLineNumInGroup <= lastLineNumInNeighboringGroup;
+    return firstLineNumInGroup <= lastLineNumInNeighboringGroup + 1;
   }
 }
 
@@ -306,8 +306,8 @@ function mergeGroups(groupNum, neighboringGroupNum) {
     const lastLineNumInGroup = group.querySelector(
       `.results-line-container:last-of-type .line-number-span`
     ).innerHTML;
-    let currentLineNumInNeighboringGroup = '';
-    while (lastLineNumInGroup !== currentLineNumInNeighboringGroup) {
+    let currentLineNumInNeighboringGroup = neighboringGroupLines[0].querySelector('.line-number-span').innerHTML;
+    while (lastLineNumInGroup > currentLineNumInNeighboringGroup) {
       currentLineNumInNeighboringGroup = neighboringGroupLines[0].querySelector('.line-number-span').innerHTML;
       neighboringGroupLines[0].parentNode.removeChild(neighboringGroupLines[0]); // remove from DOM
       neighboringGroupLines = neighboringGroupLines.splice(1); // remove from array
@@ -322,9 +322,9 @@ function mergeGroups(groupNum, neighboringGroupNum) {
     const firstLineNumInGroup = group.querySelector(
       `.results-line-container:first-of-type .line-number-span`
     ).innerHTML;
-    let currentLineNumInNeighboringGroup = '';
     let lastIndex = neighboringGroupLines.length - 1;
-    while (firstLineNumInGroup !== currentLineNumInNeighboringGroup) {
+    let currentLineNumInNeighboringGroup = neighboringGroupLines[lastIndex].querySelector('.line-number-span').innerHTML;
+    while (firstLineNumInGroup < currentLineNumInNeighboringGroup) {
       currentLineNumInNeighboringGroup = neighboringGroupLines[lastIndex].querySelector('.line-number-span').innerHTML;
       neighboringGroupLines[lastIndex].parentNode.removeChild(neighboringGroupLines[lastIndex]); // remove from DOM
       neighboringGroupLines.splice(lastIndex, 1); // remove from array
@@ -553,6 +553,20 @@ function swapLinesOnFrontEnd(swappedLines) {
 
   insertAfterMe.after(newLineContainer2);
   insertAfterMe.after(newLineContainer1);
+
+  // merge groups if necessary:
+  const groupId = newLineContainer1.parentElement.id;
+  const groupNum = parseInt(groupId.split('-')[3], 10);
+  const previousGroupNum = groupNum - 1;
+  const nextGroupNum = groupNum + 1;
+
+  if (shouldMergeGroups(groupNum, previousGroupNum)) {
+    mergeGroups(groupNum, previousGroupNum);
+  }
+
+  if (shouldMergeGroups(groupNum, nextGroupNum)) {
+    mergeGroups(groupNum, nextGroupNum);
+  }
 }
 
 function addBlankLineBelowClicked(lineNum) {
