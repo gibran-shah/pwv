@@ -26,5 +26,6 @@ https://stackoverflow.com/questions/75872817/how-can-i-search-my-encrypted-datab
 -updating line not updating indexes
 -make toast message position fixed
 -make sure line count in groups is updated after swapping lines
+-copy button not working (after adding blank lines above and below line I wanted to copy)
 
 https://stackoverflow.com/questions/79447119/how-can-i-fetch-a-set-of-documents-whose-ids-match-an-array-of-ids-in-node-js-us
