@@ -28,4 +28,6 @@ https://stackoverflow.com/questions/75872817/how-can-i-search-my-encrypted-datab
 -make sure line count in groups is updated after swapping lines
 -copy button not working (after adding blank lines above and below line I wanted to copy)
 
+-fix "word" error: err = {"code":3,"details":"'IN' supports up to 30 comparison values.","metadata":{"x-debug-tracking-id":["11309562656417421743;o=1"]}}
+
 https://stackoverflow.com/questions/79447119/how-can-i-fetch-a-set-of-documents-whose-ids-match-an-array-of-ids-in-node-js-us
