@@ -750,12 +750,12 @@ function getHostName() {
   const hostname = window.location.hostname;
   return (hostname === '127.0.0.1' || hostname === 'localhost')
     ? `http://localhost:${window.location.port}`
-    : 'http://pwv.planetshah.com';
+    : 'https://pwv.planetshah.com';
 }
 
 function getBackend() {
   const hostname = window.location.hostname;
   return (hostname === '127.0.0.1' || hostname === 'localhost')
-    ? `http://localhost:3000`
-    : 'http://ec2-18-223-71-133.us-east-2.compute.amazonaws.com:3000';
+    ? 'http://localhost:3000'
+    : 'https://pwv.planetshah.com';
 }
